@@ -42,7 +42,7 @@ public class Manager implements ManagerInterface {
 	 * @throws CardGameException - if an error occurs in the instantiation of
 	 *                           UserPool
 	 */
-	static Manager getInstance() throws CardGameException {
+	public static Manager getInstance() throws CardGameException {
 		if (manager == null)
 			manager = new Manager();
 
