@@ -1,3 +1,4 @@
+//TODO Probably delete class
 package wcg.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;

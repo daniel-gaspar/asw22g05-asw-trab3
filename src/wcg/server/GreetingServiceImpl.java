@@ -1,3 +1,4 @@
+//TODO Probably delete class
 package wcg.server;
 
 import wcg.client.GreetingService;
