@@ -1,3 +1,12 @@
 /test-classes/
-/war/
+
+/war/*
+!/war/ASW_Trab3.css
+!/war/ASW_Trab3.html
+!/war/favicon.ico
+!/war/WEB-INF/
+/war/WEB-INF/*
+!/war/WEB-INF/web.xml
+
+
 /gwt-unitCache/
