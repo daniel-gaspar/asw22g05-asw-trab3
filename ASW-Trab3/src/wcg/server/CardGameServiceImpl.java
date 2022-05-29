@@ -17,7 +17,7 @@ public class CardGameServiceImpl extends RemoteServiceServlet implements CardGam
 	
 	private Manager manager;
 	
-	CardGameServiceImpl(){
+	public CardGameServiceImpl(){
 		try {
 			manager = Manager.getInstance();
 		} catch (CardGameException e) {

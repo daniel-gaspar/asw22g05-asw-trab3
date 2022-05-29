@@ -46,12 +46,12 @@ public class UserRegistry {
 	    Button normalButton = new Button(
 	        "Register", new ClickHandler() {
 	          public void onClick(ClickEvent event) {
-	        	cgsa.registerPlayer(username.getText().toString(), pwd.getText().toString(), new AsyncCallback<Void>() {
-
+	        	  System.out.println("username: "+username.getText().toString()+" | pwd: "+pwd.getText().toString());
+	        	  cgsa.registerPlayer(username.getText().toString(), pwd.getText().toString(), new AsyncCallback<Void>() {
+	        		
 					@Override
 					public void onFailure(Throwable caught) {
-						System.out.println(caught);
-						vpanel.add(new HTML("Login not sucessful"));
+						vpanel.add(new HTML("Login not sucessful: "+caught.getLocalizedMessage()));
 					}
 
 					@Override
