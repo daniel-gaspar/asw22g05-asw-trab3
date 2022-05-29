@@ -13,7 +13,7 @@
   
   <servlet-mapping>
     <servlet-name>cardGameServlet</servlet-name>
-    <url-pattern>/web-card-game/index</url-pattern>
+    <url-pattern>/webCardGame/wcg</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
