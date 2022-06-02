@@ -14,14 +14,13 @@ import wcg.shared.events.GameEvent;
 public class CardGameServiceImpl extends RemoteServiceServlet implements CardGameService {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Manager manager;
-	
-	public CardGameServiceImpl(){
+
+	public CardGameServiceImpl() {
 		try {
 			manager = Manager.getInstance();
 		} catch (CardGameException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -48,7 +47,7 @@ public class CardGameServiceImpl extends RemoteServiceServlet implements CardGam
 
 	@Override
 	public void addPlayer(String gameId, String nick, String password) throws CardGameException {
-		manager.addPlayer(gameId,nick,password);
+		manager.addPlayer(gameId, nick, password);
 	}
 
 	@Override
