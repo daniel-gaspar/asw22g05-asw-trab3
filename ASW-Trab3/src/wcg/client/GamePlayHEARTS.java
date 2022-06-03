@@ -1,14 +1,13 @@
 package wcg.client;
 
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class GamePlayHEARTS extends GamePlay {
 
 	private Widget gamePlayHEARTS;
 
-	public GamePlayHEARTS(TabPanel tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
-		super(tabPanel, username, password, cardGameService);
+	public GamePlayHEARTS(String gameId) {
+		super(gameId);
 		this.gamePlayHEARTS = onGamePlayHEARTSInitialize();
 	}
 
