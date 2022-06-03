@@ -20,8 +20,15 @@ public class UserRegistry extends MainPanel {
 
 	private Widget userRegistry;
 
-	public UserRegistry(TabPanel tabPanel, CardGameServiceAsync cardGameService) {
-		super(tabPanel, cardGameService);
+	// Instantiates all the elements beforehand
+	private final VerticalPanel vPanel = new VerticalPanel();
+	private final HTML usernameLabel = new HTML("Username: ");
+	private final TextBox usernameBox = new TextBox();
+	private final HTML passwordLabel = new HTML("Password: ");
+	private final PasswordTextBox passwordBox = new PasswordTextBox();
+
+	public UserRegistry(TabPanel tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
+		super(tabPanel, cardGameService, messages);
 		this.userRegistry = onRegisterInitialize();
 	}
 
@@ -31,19 +38,16 @@ public class UserRegistry extends MainPanel {
 
 	public Widget onRegisterInitialize() {
 		// Create a panel to layout the widgets
-		VerticalPanel vPanel = new VerticalPanel();
 		vPanel.setSpacing(5);
 
 		// Username
-		TextBox usernameBox = new TextBox();
 		usernameBox.ensureDebugId("regUsrTxtBox");
-		vPanel.add(new HTML("Username: "));
+		vPanel.add(usernameLabel);
 		vPanel.add(usernameBox);
 
 		// Password
-		PasswordTextBox passwordBox = new PasswordTextBox();
 		passwordBox.ensureDebugId("regPwdBox");
-		vPanel.add(new HTML("Password: "));
+		vPanel.add(passwordLabel);
 		vPanel.add(passwordBox);
 
 		// Add a normal button
@@ -56,18 +60,17 @@ public class UserRegistry extends MainPanel {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						vPanel.add(new HTML("Login not successful: " + caught.getLocalizedMessage()));
+						messages.setHTML("Login not successful: " + caught.getLocalizedMessage());
 					}
 
 					@Override
 					public void onSuccess(Void result) {
-						vPanel.add(new HTML("Login successful"));
+						messages.setHTML("Login successful");
 
 						// Removes the tab "Select Game" and replaces it with a new one
-						tabPanel.remove(1);
-						tabPanel.insert(
-								new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-								"Select Game", 1);
+						// tabPanel.remove(1);
+						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+								"Select Game");
 					}
 
 				});
