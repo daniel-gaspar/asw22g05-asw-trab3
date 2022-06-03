@@ -10,19 +10,23 @@ public class WebCardGame implements EntryPoint {
 
 	private final CardGameServiceAsync cardGameService = GWT.create(CardGameService.class);
 
+	private final TabPanel tabPanel = new TabPanel();
+	private final RootPanel rootPanel = RootPanel.get();
+	private final HTML systemMessages = new HTML("System Messages: ");
+	private final HTML messages = new HTML("");
+
 	@Override
 	public void onModuleLoad() {
 		// Create a tab panel with three tabs, each of which displays a different
 		// piece of text.
-		TabPanel tabPanel = new TabPanel();
-		tabPanel.add(new UserRegistry(tabPanel, cardGameService).getUserRegistry(), "Login/Registration");
-		tabPanel.add(new HTML(""), "Select Game");
-		tabPanel.add(new HTML(""), "Play");
+		tabPanel.add(new UserRegistry(tabPanel, cardGameService, messages).getUserRegistry(), "Login/Registration");
 
 		// Show the 'bar' tab initially.
 		tabPanel.selectTab(0);
 
 		// Add it to the root panel.
-		RootPanel.get().add(tabPanel);
+		rootPanel.add(systemMessages);
+		rootPanel.add(messages);
+		rootPanel.add(tabPanel);
 	}
 }
