@@ -1,8 +1,9 @@
 package wcg.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,12 +26,8 @@ import wcg.shared.GameInfo;
  */
 public class GameCreation extends SubPanel {
 
+	private static final String NEW_GAME_STRING = "New Game...";
 	private Widget gameCreation;
-	/**
-	 * Main panel of the widget
-	 */
-	private VerticalPanel vPanel = new VerticalPanel();
-	private final HTML fetchError = new HTML("Couldn't fetch list of games");
 
 	/**
 	 * Each Widget represents a state of the gameCreation widget
@@ -42,8 +39,23 @@ public class GameCreation extends SubPanel {
 	 */
 	private Widget selectGameModeWidget;
 
+	/**
+	 * Main panel of the widget
+	 */
+	private final VerticalPanel vPanel = new VerticalPanel();
+	private final HTML fetchError = new HTML("Couldn't fetch list of games");
+	private final HorizontalPanel selectGamePanel = new HorizontalPanel();
+	private final VerticalPanel selectGameModePanel = new VerticalPanel();
+	private final ListBox gameList = new ListBox();
+	private final VerticalPanel selectGameIDPanel = new VerticalPanel();
+	private final HTML gameModeListLabel = new HTML("List of Games: ");
+	private final ListBox gameIDList = new ListBox();
+	private final HTML avlbGamesLabel = new HTML("Available Games");
+	private final Button btnJoinGame = new Button("Join Game");
+	private final Button btnStartGame = new Button("Start Game");
+
 	public GameCreation(TabPanel tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
-		super(tabPanel, username, password, cardGameService);
+		super(username, password);
 		this.gameCreation = onCreationInitialize();
 	}
 
@@ -74,142 +86,79 @@ public class GameCreation extends SubPanel {
 	}
 
 	private void initSelectGameMode(List<String> result) {
-		HorizontalPanel selectGamePanel = new HorizontalPanel();
-
 		// Panel for choosing gameMode
-		VerticalPanel selectGameModePanel = new VerticalPanel();
 		selectGameModePanel.setSpacing(10);
-		final ListBox gameList = new ListBox();
+
 		gameList.setMultipleSelect(false);
 		gameList.setVisibleItemCount(1);
 
 		for (String gameName : result)
 			gameList.addItem(gameName);
 
-		HTML gameModeListLabel = new HTML("List of Games: ");
-		Button btn_createNewGame = new Button("Create game");
 		selectGameModePanel.add(gameModeListLabel);
 		selectGameModePanel.add(gameList);
-		selectGameModePanel.add(btn_createNewGame);
+
 		selectGamePanel.add(selectGameModePanel);
 
-		// Creates player and adds him to the game
-		btn_createNewGame.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String gameID = createGame(gameList.getSelectedItemText());
-				cardGameService.addPlayer(gameID, username, password, new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						// TODO Auto-generated method stub
-					}
-
-				});
-
-			}
-		});
-
 		// Panel for list of existing games
-		VerticalPanel selectGameIDPanel = new VerticalPanel();
 		selectGameIDPanel.setSpacing(10);
-		final ListBox multiBox = new ListBox();
-		final HTML gamesList = new HTML("Available Games");
-		final Button btn_joinGame = new Button("Join Game");
-		multiBox.ensureDebugId("cwListBox-multiBox");
-		multiBox.setWidth("11em");
-		multiBox.setVisibleItemCount(10);
 
-		// Get list of existing games
-		gameList.addClickHandler(new ClickHandler() {
+		gameIDList.ensureDebugId("cwListBox-multiBox");
+		gameIDList.setWidth("11em");
+		gameIDList.setMultipleSelect(false);
+		gameIDList.setVisibleItemCount(10);
+
+		gameList.addChangeHandler(new ChangeHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-				cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onSuccess(List<GameInfo> result) {
-						// Refresh the multibox
-						for (int i = 0; i < multiBox.getItemCount(); i++) {
-							multiBox.removeItem(i);
-						}
-						if (result.size() > 0) {
-							for (GameInfo g : result) {
-								if (gameList.getSelectedItemText().equals(g.getGameName())) {
-									String gameLabel = g.getGameId() + ": " + g.getPlayersCount() + "/4"; // TODO - add
-																											// field to
-																											// get max
-																											// players
-																											// per this
-																											// game
-									multiBox.addItem(gameLabel);
-								}
-							}
-							selectGameIDPanel.add(gamesList);
-							selectGameIDPanel.add(multiBox);
-							selectGameIDPanel.add(btn_joinGame);
-							selectGamePanel.add(selectGameIDPanel);
-						}
-					}
-				});
+			public void onChange(ChangeEvent event) {
+				populateGameIDList();
 			}
 		});
+
+		populateGameIDList();
 
 		// Joins registered player to selected game
-		btn_joinGame.addClickHandler(new ClickHandler() {
+		btnJoinGame.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String gameID = multiBox.getSelectedValue();
-
-				if (multiBox.getSelectedValue().equals(null)) {
-					// TODO - error did not select correct value
-				}
-
-				else {
-					addToGame(gameID,gameList.getSelectedItemText());
-				}
+				joinGame();
 			}
-
 		});
+
+		btnStartGame.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				forceStartGame();
+			}
+		});
+
+		selectGameIDPanel.add(avlbGamesLabel);
+		selectGameIDPanel.add(gameIDList);
+		selectGameIDPanel.add(btnJoinGame);
+		selectGameIDPanel.add(btnStartGame);
+		selectGamePanel.add(selectGameIDPanel);
 
 		selectGameModeWidget = selectGamePanel;
 	}
 
 	/**
-	 * Prompts the server to create a game, and returns the new gameId on success
+	 * Prompts the server to create a game, and adds Player to it
 	 * 
 	 * @param gameName - Name of Game to create
-	 * @return Id of new game
 	 */
-	private String createGame(String gameName) {
-
-		final List<String> gameToJoin = new ArrayList<>();
+	private void createGame(String gameName) {
 
 		cardGameService.createGame(gameName, new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				vPanel.add(new HTML("Failed to create a game: " + caught.getCause()));
+				messages.setHTML("Failed to create a game: " + caught.getCause());
 			}
 
 			@Override
 			public void onSuccess(String gameId) {
-				vPanel.add(new HTML("Game Sucessfully created go To Play"));
-				gameToJoin.add(gameId);
+				addToGame(gameId, gameName);
 			}
 		});
-
-		return gameToJoin.get(0);
 	}
 
 	/**
@@ -245,16 +194,117 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onSuccess(Void result) {
-				tabPanel.remove(2);
-				if ("WAR".equals(name)) {
-					tabPanel.add(new GamePlayWAR(tabPanel, username, password, cardGameService).getGamePlayWAR(),
-							"Play");
-				}
-				if ("HEARTS".equals(name)) {
-					tabPanel.add(new GamePlayHEARTS(tabPanel, username, password, cardGameService).getGamePlayHEARTS(),
-							"Play");
+				// TODO - implement onSuccess addPlayer
+				messages.setHTML("Game successfully joined " + gameId + ". You can now Start the Game");
+				populateGameIDList();
+			}
+		});
+	}
+
+	private void populateGameIDList() {
+		String name = gameList.getSelectedItemText();
+
+		gameIDList.clear();
+
+		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(List<GameInfo> availableGameInfos) {
+				for (GameInfo gameInfo : availableGameInfos) {
+					if (gameInfo.getGameName().equals(name)) {
+						String itemForList = gameInfo.getGameId() + " - " + gameInfo.getPlayersCount() + "/"
+								+ ("WAR".equals(name) ? "2" : "4");
+						gameIDList.addItem(itemForList, gameInfo.getGameId());
+					}
 				}
 			}
 		});
+
+		gameIDList.addItem(NEW_GAME_STRING, NEW_GAME_STRING);
+
+		gameIDList.setSelectedIndex(0);
+	}
+
+	private void forceStartGame() {
+
+		String gameId = gameIDList.getSelectedValue();
+
+		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(List<GameInfo> availableGameInfos) {
+				for (GameInfo gameInfo : availableGameInfos) {
+					if (gameInfo.getGameId().equals(gameId)) {
+						for (int i = gameInfo.getPlayersCount(); i < ("WAR".equals(gameInfo.getGameName()) ? 2
+								: 4); i++) {
+							addBot(gameId);
+						}
+						if ("WAR".equals(gameInfo.getGameName())) {
+							tabPanel.add(new GamePlayWAR(gameId).getGamePlayWAR(), "Play");
+						}
+						if ("HEARTS".equals(gameInfo.getGameName())) {
+							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlayHEARTS(), "Play");
+						}
+					}
+				}
+			}
+		});
+	}
+
+	private void addBot(String gameId) {
+
+		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+
+	private void joinGame() {
+		String gameID = gameIDList.getSelectedValue();
+		String gameName = gameList.getSelectedItemText();
+
+		if (gameID.equals(NEW_GAME_STRING)) {
+			createGame(gameName);
+		} else {
+			cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onSuccess(List<GameInfo> availableGameInfos) {
+					for (GameInfo gameInfo : availableGameInfos) {
+						if (gameInfo.getGameId().equals(gameID)
+								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
+							addToGame(gameID, gameName);
+						}
+					}
+				}
+			});
+		}
 	}
 }
