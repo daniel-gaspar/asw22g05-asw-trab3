@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,6 +20,8 @@ import wcg.shared.events.RoundUpdateEvent;
 import wcg.shared.events.SendCardsEvent;
 
 public abstract class GamePlay extends SubPanel {
+	
+	protected Widget gamePlay;
 
 	// To process all events
 	private String gameId;
@@ -47,11 +50,29 @@ public abstract class GamePlay extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		processEvents();
+		gamePlay = onGamePlayInitialize();
 //		new Timer() {
 //			public void run() {
 //				processEvents();
 //			}
 //		}.scheduleRepeating(TIMER_DELAY);
+	}
+	
+	private Widget onGamePlayInitialize() {
+		DockPanel dock = new DockPanel();
+		dock.setStyleName("cw-DockPanel");
+		dock.setSpacing(0);
+		dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		
+
+		dock.add(drawCardsOnTable(), DockPanel.NORTH);
+		dock.add(drawCardsOnHand(), DockPanel.SOUTH);
+
+		return dock;
+	}
+	
+	protected Widget getGamePlay() {
+		return gamePlay;
 	}
 
 	/**

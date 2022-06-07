@@ -20,31 +20,8 @@ import wcg.shared.cards.Card;
 
 public class GamePlayHEARTS extends GamePlay {
 
-	private Widget gamePlayHEARTS;
-
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
-		this.gamePlayHEARTS = onGamePlayHEARTSInitialize();
-	}
-
-	public Widget getGamePlayHEARTS() {
-		return gamePlayHEARTS;
-	}
-	
-
-	private Widget onGamePlayHEARTSInitialize() {
-
-		// TODO - Create widget for game play HEARTS
-		DockPanel dock = new DockPanel();
-		dock.setStyleName("cw-DockPanel");
-		dock.setSpacing(0);
-		dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
-		
-
-		dock.add(drawCardsOnTable(), DockPanel.NORTH);
-		dock.add(drawCardsOnHand(), DockPanel.SOUTH);
-
-		return dock;
 	}
 
 	@Override

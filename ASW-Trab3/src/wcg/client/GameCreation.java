@@ -281,10 +281,10 @@ public class GameCreation extends SubPanel {
 						
 						tabPanel.remove(2);
 						if ("WAR".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayWAR(gameId).getGamePlayWAR(), "Play");
+							tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play");
 						}
 						if ("HEARTS".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlayHEARTS(), "Play");
+							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play");
 						}
 					}
 				}
