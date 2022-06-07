@@ -7,6 +7,6 @@
 !/war/WEB-INF/
 /war/WEB-INF/*
 !/war/WEB-INF/web.xml
-
+!/war/webCardGame/imgs/
 
 /gwt-unitCache/
