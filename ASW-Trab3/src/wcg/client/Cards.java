@@ -27,7 +27,7 @@ public class Cards {
 		}
 		
 		Image image = new Image(IMAGE_LOCATION + cardFile);
-		image.setPixelSize(30, 100);
+		image.setPixelSize(83, 120);
 			
 		return image;
 	}
