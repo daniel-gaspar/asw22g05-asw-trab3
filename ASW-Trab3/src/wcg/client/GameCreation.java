@@ -230,56 +230,6 @@ public class GameCreation extends SubPanel {
 		gameIDList.setSelectedIndex(0);
 	}
 
-	private void forceStartGame() {
-
-		String gameId = gameIDList.getSelectedValue();
-
-		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onSuccess(List<GameInfo> availableGameInfos) {
-				for (GameInfo gameInfo : availableGameInfos) {
-					if (gameInfo.getGameId().equals(gameId)) {
-						for (int i = gameInfo.getPlayersCount(); i < ("WAR".equals(gameInfo.getGameName()) ? 2
-								: 4); i++) {
-							addBot(gameId);
-						}
-						if ("WAR".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayWAR(gameId).getGamePlayWAR(), "Play");
-						}
-						if ("HEARTS".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlayHEARTS(), "Play");
-						}
-					}
-				}
-			}
-		});
-	}
-
-	private void addBot(String gameId) {
-
-		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-	}
-
 	private void joinGame() {
 		String gameID = gameIDList.getSelectedValue();
 		String gameName = gameList.getSelectedItemText();
@@ -306,5 +256,57 @@ public class GameCreation extends SubPanel {
 				}
 			});
 		}
+	}
+	
+	private void forceStartGame() {
+
+		String gameId = gameIDList.getSelectedValue();
+
+		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(List<GameInfo> availableGameInfos) {
+				for (GameInfo gameInfo : availableGameInfos) {
+					if (gameInfo.getGameId().equals(gameId)) {
+						for (int i = gameInfo.getPlayersCount(); i < ("WAR".equals(gameInfo.getGameName()) ? 2
+								: 4); i++) {
+							addBot(gameId);
+						}
+						
+						tabPanel.remove(2);
+						if ("WAR".equals(gameInfo.getGameName())) {
+							tabPanel.add(new GamePlayWAR(gameId).getGamePlayWAR(), "Play");
+						}
+						if ("HEARTS".equals(gameInfo.getGameName())) {
+							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlayHEARTS(), "Play");
+						}
+					}
+				}
+			}
+		});
+	}
+	
+	private void addBot(String gameId) {
+
+		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 }
