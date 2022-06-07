@@ -3,11 +3,10 @@ package wcg.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Timer;
 
 import wcg.shared.cards.Card;
 import wcg.shared.events.GameEndEvent;
@@ -40,17 +39,16 @@ public abstract class GamePlay extends SubPanel {
 	
 	//To schedule the processEvents routine
 	private static final int TIMER_DELAY = 5 * 1000; // 5 seconds
-	private Timer timer = new Timer();
-	private TimerTask task = new TimerTask() {
-		public void run() {
-			processEvents();
-		}
-	};
 	
 	protected GamePlay(String gameId) {
 		super(username, password);
 		this.gameId = gameId;
-		timer.scheduleAtFixedRate(task, 0, TIMER_DELAY);
+		processEvents();
+		new Timer() {
+			public void run() {
+				processEvents();
+			}
+		}.scheduleRepeating(TIMER_DELAY);
 	}
 	
 	/**
@@ -107,20 +105,6 @@ public abstract class GamePlay extends SubPanel {
 	 */
 	protected List<Card> getCardsOnHand() {
 		return cardsOnHand;
-	}
-
-	/**
-	 * @return the timer
-	 */
-	protected Timer getTimer() {
-		return timer;
-	}
-
-	/**
-	 * @return the task
-	 */
-	protected TimerTask getTask() {
-		return task;
 	}
 
 	/**
