@@ -1,6 +1,5 @@
 package wcg.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 
 import wcg.shared.cards.Card;
@@ -12,7 +11,7 @@ public class Cards {
 	private static final String FILE_EXTENSION = ".png";
 	private static final String SEPARATOR = "_of_";
 	private static final String SEPARATOR_JOKER = "_joker";
-	private static final String IMAGE_LOCATION = GWT.getModuleBaseURL() + "imgs/";
+	private static final String IMAGE_LOCATION = "images/";
 	
 	Cards() {
 	}
