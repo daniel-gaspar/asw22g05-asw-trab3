@@ -25,8 +25,11 @@ public class Cards {
 		else {
 			cardFile = getValueText(card.getValue()) + SEPARATOR + getSuitText(card.getSuit()) + FILE_EXTENSION;
 		}
+		
+		Image image = new Image(IMAGE_LOCATION + cardFile);
+		image.setPixelSize(30, 100);
 			
-		return new Image(IMAGE_LOCATION + cardFile);
+		return image;
 	}
 	
 	private static String getJokerColorText(CardSuit suit) {
