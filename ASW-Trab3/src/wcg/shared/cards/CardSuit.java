@@ -25,6 +25,25 @@ public enum CardSuit {
 	public String toString() {
 		return label;
 	}
+	
+	/**
+	 * Returns the text label instead of symbol
+	 */
+	
+	public String toText() {
+		switch(label) {
+			case "♣":
+				return "clubs";
+			case "♦":
+				return "diamonds";
+			case "♥":
+				return "hearts";
+			case "♠":
+				return "spades";
+			default:
+				return null;
+		}
+	}
 
 	/**
 	 * @return The <em>CardSuit</em>'s <em>score</em>

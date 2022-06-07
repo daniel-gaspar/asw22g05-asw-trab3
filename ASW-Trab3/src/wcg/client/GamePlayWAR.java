@@ -21,14 +21,16 @@ public class GamePlayWAR extends GamePlay {
 	}
 
 	@Override
-	protected void drawCardsOnHand() {
+	protected Widget drawCardsOnHand() {
 		// TODO Auto-generated method stub
+		return null;
 		
 	}
 
 	@Override
-	protected void drawCardsOnTable() {
+	protected Widget drawCardsOnTable() {
 		// TODO Auto-generated method stub
+		return null;
 		
 	}
 }

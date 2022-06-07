@@ -1,11 +1,14 @@
 package wcg.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 
 import wcg.shared.cards.Card;
@@ -17,40 +20,40 @@ import wcg.shared.events.SendCardsEvent;
 
 public abstract class GamePlay extends SubPanel {
 
-	//To process all events
+	// To process all events
 	private String gameId;
-	
-	//To process RoundUpdateEvent, RoundConclusionEvent, GameEndEvent
+
+	// To process RoundUpdateEvent, RoundConclusionEvent, GameEndEvent
 	private Map<String, List<Card>> onTable;
 	private int roundsCompleted;
-	
-	//To process RoundConclusionEvent, GameEndEvent
-	private Map<String,Integer> points;
-	
-	//To process GameEndEvent
+
+	// To process RoundConclusionEvent, GameEndEvent
+	private Map<String, Integer> points;
+
+	// To process GameEndEvent
 	private String winner;
-	
-	//To process RoundUpdateEvent
+
+	// To process RoundUpdateEvent
 	private String hasTurn;
 	private String mode;
-	
-	//To process SendCardsEvent
+
+	// To process SendCardsEvent
 	private List<Card> cardsOnHand = new ArrayList<>();
-	
-	//To schedule the processEvents routine
+
+	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 5 * 1000; // 5 seconds
-	
+
 	protected GamePlay(String gameId) {
 		super(username, password);
 		this.gameId = gameId;
 		processEvents();
-		new Timer() {
-			public void run() {
-				processEvents();
-			}
-		}.scheduleRepeating(TIMER_DELAY);
+//		new Timer() {
+//			public void run() {
+//				processEvents();
+//			}
+//		}.scheduleRepeating(TIMER_DELAY);
 	}
-	
+
 	/**
 	 * @return the gameId
 	 */
@@ -110,63 +113,64 @@ public abstract class GamePlay extends SubPanel {
 	/**
 	 * Requests a list of Recent Events from the server, and processes them
 	 */
-	private void processEvents()  {
+	private void processEvents() {
 		cardGameService.getRecentEvents(username, password, new AsyncCallback<List<GameEvent>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());	
+				messages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(List<GameEvent> recentEvents) {
-				for(GameEvent event : recentEvents) {
-					if(event instanceof SendCardsEvent) {
+				for (GameEvent event : recentEvents) {
+					if (event instanceof SendCardsEvent) {
 						cardsOnHand.addAll(((SendCardsEvent) event).getCards());
-						
+
 						messages.setHTML("Cards have been given.");
-						
+
 						drawCardsOnHand();
 					}
-					if(event instanceof RoundUpdateEvent) {
+					if (event instanceof RoundUpdateEvent) {
 						onTable = ((RoundUpdateEvent) event).getCardsOnTable();
 						hasTurn = ((RoundUpdateEvent) event).getNickWithTurn();
 						roundsCompleted = ((RoundUpdateEvent) event).getRoundsCompleted();
 						mode = ((RoundUpdateEvent) event).getMode();
-						
+
 						messages.setHTML("It is now " + hasTurn + "'s turn.");
-						
+
 						drawCardsOnTable();
 					}
-					if(event instanceof RoundConclusionEvent) {
+					if (event instanceof RoundConclusionEvent) {
 						onTable = ((RoundConclusionEvent) event).getCardsOnTable();
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
-						
-						messages.setHTML("Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
-						
+
+						messages.setHTML(
+								"Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
+
 						drawCardsOnTable();
 					}
-					if(event instanceof GameEndEvent) {
+					if (event instanceof GameEndEvent) {
 						onTable = ((GameEndEvent) event).getCardsOnTable();
 						roundsCompleted = ((GameEndEvent) event).getRoundsCompleted();
 						winner = ((GameEndEvent) event).getWinner();
 						points = ((GameEndEvent) event).getPoints();
-						
-						messages.setHTML(winner + " has won the game with " + points.get(winner)  + " points.");
-						
+
+						messages.setHTML(winner + " has won the game with " + points.get(winner) + " points.");
+
 						drawCardsOnTable();
 					}
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Draw the cards currently on Player's hand
 	 */
 	protected abstract Widget drawCardsOnHand();
-	
+
 	/**
 	 * Draw the cards currently on the Table
 	 */
