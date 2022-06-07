@@ -66,11 +66,20 @@ public class UserRegistry extends MainPanel {
 					@Override
 					public void onSuccess(Void result) {
 						messages.setHTML("Login successful");
+						
+						// Removes the tab Login/Register and replaces it with user info
+						tabPanel.remove(0);
+						tabPanel.insert(new HTML("Username: "+username),"User", 0);
 
 						// Removes the tab "Select Game" and replaces it with a new one
-						// tabPanel.remove(1);
-						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-								"Select Game");
+						tabPanel.remove(1);
+						tabPanel.insert(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+								"Select Game",1);
+						
+						tabPanel.remove(2);
+						tabPanel.insert(new HTML("No game has been selected"), "Play", 2);
+						
+						tabPanel.selectTab(1);
 					}
 
 				});

@@ -20,7 +20,8 @@ public class WebCardGame implements EntryPoint {
 		// Create a tab panel with three tabs, each of which displays a different
 		// piece of text.
 		tabPanel.add(new UserRegistry(tabPanel, cardGameService, messages).getUserRegistry(), "Login/Registration");
-
+		tabPanel.add(new HTML("Not logged in yet"),"Select Game");
+		tabPanel.add(new HTML("No game has yet started"),"Play");
 		// Show the 'bar' tab initially.
 		tabPanel.selectTab(0);
 
