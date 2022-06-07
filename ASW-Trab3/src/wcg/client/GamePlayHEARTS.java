@@ -19,4 +19,16 @@ public class GamePlayHEARTS extends GamePlay {
 		// TODO - Create widget for game play HEARTS
 		return null;
 	}
+
+	@Override
+	protected void drawCardsOnHand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void drawCardsOnTable() {
+		// TODO Auto-generated method stub
+		
+	}
 }
