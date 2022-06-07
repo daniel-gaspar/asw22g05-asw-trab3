@@ -9,7 +9,7 @@ import wcg.shared.cards.Card;
 import wcg.shared.cards.CardSuit;
 import wcg.shared.cards.CardValue;
 
-public abstract class AbstractCards {
+public class Cards {
 	
 	protected List<Card> cards;
 	
@@ -17,9 +17,8 @@ public abstract class AbstractCards {
 	private static final String SEPARATOR = "_of_";
 	private static final String SEPARATOR_JOKER = "_joker";
 	private static final String IMAGE_LOCATION = GWT.getModuleBaseURL() + "imgs/";
-	private static final String BACK_CARD = "back.png";
 	
-	AbstractCards(List<Card> cards) {
+	Cards(List<Card> cards) {
 		this.cards = cards;
 	}
 
@@ -27,26 +26,22 @@ public abstract class AbstractCards {
 		String cardFile;
 		
 		if(card.getValue() == null) {
-			cardFile = getJokerColor(card.getSuit()) + SEPARATOR_JOKER + FILE_EXTENSION;
+			cardFile = getJokerColorText(card.getSuit()) + SEPARATOR_JOKER + FILE_EXTENSION;
 		}
 		else {
-			cardFile = getValue(card.getValue()) + SEPARATOR + getSuit(card.getSuit()) + FILE_EXTENSION;
+			cardFile = getValueText(card.getValue()) + SEPARATOR + getSuitText(card.getSuit()) + FILE_EXTENSION;
 		}
 			
 		return new Image(IMAGE_LOCATION + cardFile);
 	}
 	
-	protected Image createBackCard() {
-		return new Image(IMAGE_LOCATION + BACK_CARD);
-	}
-	
-	private String getJokerColor(CardSuit suit) {
+	private String getJokerColorText(CardSuit suit) {
 		if(suit.equals(CardSuit.CLUBS) || suit.equals(CardSuit.SPADES))
 			return "black";
 		return "red";
 	}
 	
-	private String getValue(CardValue value) {
+	private String getValueText(CardValue value) {
 		if(value.equals(CardValue.ACE) || value.equals(CardValue.JACK) || value.equals(CardValue.KING) || value.equals(CardValue.QUEEN)) {
 			if(value.equals(CardValue.ACE))
 				return "ace";
@@ -60,7 +55,7 @@ public abstract class AbstractCards {
 		return value.toString();
 	}
 	
-	private String getSuit(CardSuit suit) {
+	private String getSuitText(CardSuit suit) {
 		if(suit.equals(CardSuit.CLUBS))
 			return "clubs";
 		if(suit.equals(CardSuit.DIAMONDS))
