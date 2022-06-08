@@ -102,12 +102,13 @@ public class GamePlayWAR extends GamePlay {
 		for (String key : getOnTable().keySet()) {
 			VerticalPanel playerContainer = new VerticalPanel();
 			HorizontalPanel cardsContainer = new HorizontalPanel();
+			cardsContainer.clear();
 			for (Card card : getOnTable().get(key)) {
 				cardsContainer.add(Cards.createCard(card));
 			}
 			playerContainer.add(cardsContainer);
 			playerContainer.add(new HTML("Player: " + key));
-			cardsOnTablePanel.add(playerContainer, (username.equals(key) ? DockPanel.SOUTH : DockPanel.CENTER));
+			cardsOnTablePanel.add(playerContainer, (username.equals(key) ? DockPanel.SOUTH : DockPanel.NORTH));
 		}
 
 		return cardsOnTablePanel;
