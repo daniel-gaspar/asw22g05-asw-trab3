@@ -62,12 +62,16 @@ public abstract class GamePlay extends SubPanel {
 		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
 		processEvents();
-		/*
-		 * Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-		 * 
-		 * @Override public boolean execute() { processEvents(); return true; } },
-		 * TIMER_DELAY);
-		 */
+
+		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+
+			@Override
+			public boolean execute() {
+				processEvents();
+				return true;
+			}
+		}, TIMER_DELAY);
+
 	}
 
 	/**
