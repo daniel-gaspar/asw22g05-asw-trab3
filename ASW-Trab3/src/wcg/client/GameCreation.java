@@ -189,12 +189,11 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO - implement onFailure addPlayer
+				messages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				// TODO - implement onSuccess addPlayer
 				messages.setHTML("Game successfully joined " + gameId + ". You can now Start the Game");
 				populateGameIDList();
 			}
@@ -210,7 +209,7 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				messages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -241,8 +240,7 @@ public class GameCreation extends SubPanel {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-
+					messages.setHTML(caught.getMessage());
 				}
 
 				@Override
@@ -259,15 +257,12 @@ public class GameCreation extends SubPanel {
 	}
 	
 	private void forceStartGame() {
-
 		String gameId = gameIDList.getSelectedValue();
 
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
+				messages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -298,14 +293,12 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
+				messages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
-
+				messages.setHTML("Bot added");
 			}
 		});
 	}
