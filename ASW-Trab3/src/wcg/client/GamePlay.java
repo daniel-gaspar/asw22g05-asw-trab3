@@ -1,16 +1,14 @@
 package wcg.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Timer;
 
 import wcg.shared.cards.Card;
 import wcg.shared.events.GameEndEvent;
@@ -22,6 +20,10 @@ import wcg.shared.events.SendCardsEvent;
 public abstract class GamePlay extends SubPanel {
 	
 	protected Widget gamePlay;
+	
+	private final DockPanel gamePlayPanel = new DockPanel();
+	private Widget centerPanel = new VerticalPanel();
+	private Widget southPanel = new VerticalPanel();
 
 	// To process all events
 	private String gameId;
@@ -49,26 +51,26 @@ public abstract class GamePlay extends SubPanel {
 	protected GamePlay(String gameId) {
 		super(username, password);
 		this.gameId = gameId;
-		processEvents();
 		gamePlay = onGamePlayInitialize();
-//		new Timer() {
-//			public void run() {
-//				processEvents();
-//			}
-//		}.scheduleRepeating(TIMER_DELAY);
+		processEvents();
+		/*Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+			@Override
+			public boolean execute() {
+				processEvents();
+				return true;
+			}	
+		}, TIMER_DELAY);*/
 	}
 	
 	private Widget onGamePlayInitialize() {
-		DockPanel dock = new DockPanel();
-		dock.setStyleName("cw-DockPanel");
-		dock.setSpacing(0);
-		dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		gamePlayPanel.setStyleName("cw-DockPanel");
+		gamePlayPanel.setSpacing(0);
+		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 		
+		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
+		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
 
-		dock.add(drawCardsOnTable(), DockPanel.NORTH);
-		dock.add(drawCardsOnHand(), DockPanel.SOUTH);
-
-		return dock;
+		return gamePlayPanel;
 	}
 	
 	protected Widget getGamePlay() {
@@ -150,7 +152,7 @@ public abstract class GamePlay extends SubPanel {
 
 						messages.setHTML("Cards have been given.");
 
-						drawCardsOnHand();
+						redoSouthPanel();
 					}
 					if (event instanceof RoundUpdateEvent) {
 						onTable = ((RoundUpdateEvent) event).getCardsOnTable();
@@ -159,8 +161,8 @@ public abstract class GamePlay extends SubPanel {
 						mode = ((RoundUpdateEvent) event).getMode();
 
 						messages.setHTML("It is now " + hasTurn + "'s turn.");
-
-						drawCardsOnTable();
+						
+						redoCenterPanel();
 					}
 					if (event instanceof RoundConclusionEvent) {
 						onTable = ((RoundConclusionEvent) event).getCardsOnTable();
@@ -170,7 +172,7 @@ public abstract class GamePlay extends SubPanel {
 						messages.setHTML(
 								"Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
 
-						drawCardsOnTable();
+						redoCenterPanel();
 					}
 					if (event instanceof GameEndEvent) {
 						onTable = ((GameEndEvent) event).getCardsOnTable();
@@ -180,7 +182,7 @@ public abstract class GamePlay extends SubPanel {
 
 						messages.setHTML(winner + " has won the game with " + points.get(winner) + " points.");
 
-						drawCardsOnTable();
+						redoCenterPanel();
 					}
 				}
 			}
@@ -196,4 +198,22 @@ public abstract class GamePlay extends SubPanel {
 	 * Draw the cards currently on the Table
 	 */
 	protected abstract Widget drawCardsOnTable();
+
+	/**
+	 * 
+	 */
+	private void redoSouthPanel() {
+		gamePlayPanel.remove(southPanel);
+		southPanel = drawCardsOnHand();
+		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
+	}
+
+	/**
+	 * 
+	 */
+	private void redoCenterPanel() {
+		gamePlayPanel.remove(centerPanel);
+		centerPanel = drawCardsOnTable();
+		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
+	}
 }
