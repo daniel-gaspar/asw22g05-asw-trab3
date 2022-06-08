@@ -217,7 +217,7 @@ public class GameBot extends Thread implements Player {
 		roundsCompleted = event.getRoundsCompleted();
 		mode = event.getMode();
 
-		if (hasTurn.equals(nick)) {
+		if (hasTurn == nick) {
 			hasToPlay = true;
 		} else {
 			hasToPlay = false;
