@@ -16,6 +16,9 @@ public class Card implements Comparable<Card>, Serializable {
 
 	private CardSuit suit;
 	private CardValue value;
+	
+	public Card() {
+	}
 
 	public Card(CardSuit suit, CardValue value) {
 		this.suit = suit;
@@ -63,7 +66,7 @@ public class Card implements Comparable<Card>, Serializable {
 	 * @return A value indicating how the <em>suit</em> of this card compares to the
 	 *         other
 	 */
-	private int compareSuit(Card otherCard) {
+	public int compareSuit(Card otherCard) {
 		if (suit == otherCard.suit) {
 			return 0;
 		}
@@ -91,7 +94,7 @@ public class Card implements Comparable<Card>, Serializable {
 	 * @return A value indicating how the <em>value</em> of this card compares to
 	 *         the other
 	 */
-	private int compareValue(Card otherCard) {
+	public int compareValue(Card otherCard) {
 		if (value == otherCard.value) {
 			return 0;
 		}

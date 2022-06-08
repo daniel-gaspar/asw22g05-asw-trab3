@@ -4,32 +4,149 @@ package wcg.shared.cards;
  * Enumeration with the values of cards
  */
 public enum CardValue {
-	V02("2", 2), V03("3", 3), V04("4", 4), V05("5", 5), V06("6", 6), V07("7", 7), V08("8", 8), V09("9", 9),
-	V10("10", 10), QUEEN("Q", 11), JACK("J", 12), KING("K", 13), ACE("A", 14);
+	V02 {
+		@Override
+		public String toString() {
+			return "2";
+		}
 
-	private final String label;
-	private final int score;
+		@Override
+		public int getScore() {
+			return 2;
+		}
+	},
+	V03 {
+		@Override
+		public String toString() {
+			return "3";
+		}
 
-	private CardValue(String label, int score) {
-		this.label = label;
-		this.score = score;
-	}
+		@Override
+		public int getScore() {
+			return 3;
+		}
+	},
+	V04 {
+		@Override
+		public String toString() {
+			return "4";
+		}
 
-	/**
-	 * Replaces the default toString() in <strong>enum</strong>, returning the
-	 * <em>label</em> provided when creating the enumeration.
-	 * 
-	 * @return The <em>CardValue</em>'s <em>label</em>
-	 */
-	@Override
-	public String toString() {
-		return label;
-	}
+		@Override
+		public int getScore() {
+			return 4;
+		}
+	},
+	V05 {
+		@Override
+		public String toString() {
+			return "5";
+		}
 
-	/**
-	 * @return The <em>CardValue</em>'s <em>score</em>
-	 */
-	public int getScore() {
-		return score;
-	}
+		@Override
+		public int getScore() {
+			return 5;
+		}
+	},
+	V06 {
+		@Override
+		public String toString() {
+			return "6";
+		}
+
+		@Override
+		public int getScore() {
+			return 6;
+		}
+	},
+	V07 {
+		@Override
+		public String toString() {
+			return "7";
+		}
+
+		@Override
+		public int getScore() {
+			return 7;
+		}
+	},
+	V08 {
+		@Override
+		public String toString() {
+			return "8";
+		}
+
+		@Override
+		public int getScore() {
+			return 8;
+		}
+	},
+	V09 {
+		@Override
+		public String toString() {
+			return "9";
+		}
+
+		@Override
+		public int getScore() {
+			return 9;
+		}
+	},
+	V10 {
+		@Override
+		public String toString() {
+			return "10";
+		}
+
+		@Override
+		public int getScore() {
+			return 10;
+		}
+	},
+	QUEEN {
+		@Override
+		public String toString() {
+			return "Q";
+		}
+
+		@Override
+		public int getScore() {
+			return 11;
+		}
+	},
+	JACK {
+		@Override
+		public String toString() {
+			return "J";
+		}
+
+		@Override
+		public int getScore() {
+			return 12;
+		}
+	},
+	KING {
+		@Override
+		public String toString() {
+			return "K";
+		}
+
+		@Override
+		public int getScore() {
+			return 13;
+		}
+	},
+	ACE {
+		@Override
+		public String toString() {
+			return "A";
+		}
+
+		@Override
+		public int getScore() {
+			return 14;
+		}
+	};
+
+	public abstract int getScore();
 }

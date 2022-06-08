@@ -5,51 +5,50 @@ package wcg.shared.cards;
  */
 public enum CardSuit {
 
-	CLUBS("♣", 1), DIAMONDS("♦", 2), HEARTS("♥", 3), SPADES("♠", 4);
-
-	private final String label;
-	private final int score;
-
-	private CardSuit(String label, int score) {
-		this.label = label;
-		this.score = score;
-	}
-
-	/**
-	 * Replaces the default toString() in <strong>enum</strong>, returning the
-	 * <em>label</em> provided when creating the enumeration.
-	 * 
-	 * @return The <em>CardSuit</em>'s <em>label</em>
-	 */
-	@Override
-	public String toString() {
-		return label;
-	}
-	
-	/**
-	 * Returns the text label instead of symbol
-	 */
-	
-	public String toText() {
-		switch(label) {
-			case "♣":
-				return "clubs";
-			case "♦":
-				return "diamonds";
-			case "♥":
-				return "hearts";
-			case "♠":
-				return "spades";
-			default:
-				return null;
+	CLUBS {
+		@Override
+		public int getScore() {
+			return 1;
 		}
-	}
 
-	/**
-	 * @return The <em>CardSuit</em>'s <em>score</em>
-	 */
-	public int getScore() {
-		return score;
-	}
+		@Override
+		public String toString() {
+			return "♣";
+		}
+	},
+	DIAMONDS {
+		@Override
+		public int getScore() {
+			return 2;
+		}
 
+		@Override
+		public String toString() {
+			return "♦";
+		}
+	},
+	HEARTS {
+		@Override
+		public int getScore() {
+			return 3;
+		}
+
+		@Override
+		public String toString() {
+			return "♥";
+		}
+	},
+	SPADES {
+		@Override
+		public int getScore() {
+			return 4;
+		}
+
+		@Override
+		public String toString() {
+			return "♠";
+		}
+	};
+
+	public abstract int getScore();
 }
