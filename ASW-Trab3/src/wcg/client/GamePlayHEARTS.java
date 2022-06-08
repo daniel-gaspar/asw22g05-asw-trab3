@@ -18,16 +18,25 @@ import com.google.gwt.user.client.ui.Widget;
 import wcg.shared.cards.Card;
 
 public class GamePlayHEARTS extends GamePlay {
-	
-	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
+
+	/**
+	 * The Widgets which will belong in centerPanel and southPanel of GamePlay,
+	 * respectively
+	 */
 	private final DockPanel cardsOnTablePanel = new DockPanel();
-	
+	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
+
 	private Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
-	
+
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
 	}
-	
+
+	/**
+	 * Clears the current Panel containing Cards on Hand, and then uses the List of
+	 * Cards to draw them, adding a ClickHandler to each Image Card, which prompts
+	 * the server to Play the selected card
+	 */
 	@Override
 	protected Widget drawCardsOnHand() {
 		cardsOnHandPanel.clear();
@@ -36,19 +45,20 @@ public class GamePlayHEARTS extends GamePlay {
 			card.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					cardGameService.playCards(getGameId(), username, password, Arrays.asList(c), new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							messages.setHTML(caught.getMessage());
-						}
+					cardGameService.playCards(getGameId(), username, password, Arrays.asList(c),
+							new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									messages.setHTML(caught.getMessage());
+								}
 
-						@Override
-						public void onSuccess(Void result) {
-							getCardsOnHand().remove(c);
-							Image cardToRemove = (Image) event.getSource();
-							cardToRemove.removeFromParent();
-						}
-					});
+								@Override
+								public void onSuccess(Void result) {
+									getCardsOnHand().remove(c);
+									Image cardToRemove = (Image) event.getSource();
+									cardToRemove.removeFromParent();
+								}
+							});
 				}
 			});
 
@@ -57,6 +67,18 @@ public class GamePlayHEARTS extends GamePlay {
 		return cardsOnHandPanel;
 	}
 
+	/**
+	 * <p>
+	 * Clears the Panel and then
+	 * </p>
+	 * <p>
+	 * Places the Cards on Table in a South, East, North, West cross pattern, with
+	 * the Player always being placed in South
+	 * </p>
+	 * <p>
+	 * The following players get added in order, given by nextPos()
+	 * </p>
+	 */
 	@Override
 	protected Widget drawCardsOnTable() {
 		cardsOnTablePanel.clear();
@@ -80,6 +102,11 @@ public class GamePlayHEARTS extends GamePlay {
 		return cardsOnTablePanel;
 	}
 
+	/**
+	 * Simply returns the next position which should be added to the Map
+	 * 
+	 * @return the next position
+	 */
 	private DockPanel.DockLayoutConstant nextPos() {
 		if (playerPosition.containsValue(DockPanel.NORTH)) {
 			return DockPanel.WEST;

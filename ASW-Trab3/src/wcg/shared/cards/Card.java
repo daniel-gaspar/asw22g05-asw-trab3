@@ -16,7 +16,7 @@ public class Card implements Comparable<Card>, Serializable {
 
 	private CardSuit suit;
 	private CardValue value;
-	
+
 	public Card() {
 	}
 

@@ -20,27 +20,19 @@ import wcg.shared.GameInfo;
  * 
  * Extends SubPanel by adding the Widget gameCreation
  * 
- * Creates a Panel with a list of Available Game Names and a button to Start the
- * Game
+ * Creates a Panel with a Dropbox of Available Game Names, a ListBox of
+ * Available Games with that Name and buttons to Join and Start the Game
  *
  */
 public class GameCreation extends SubPanel {
 
 	private static final String NEW_GAME_STRING = "New Game...";
-	private Widget gameCreation;
 
-	/**
-	 * Each Widget represents a state of the gameCreation widget
-	 * selectGameModeWidget: - Initial state: Shows a list of game mode available,
-	 * displays an error if fails to fetch createNewGameWidget: - If there are no
-	 * game available, allows the user to create a new game - Added at the final of
-	 * joinExistingGameWidget joinExistingGameWidget: - Allows the user to join an
-	 * existing game or create a new one
-	 */
+	private Widget gameCreation;
 	private Widget selectGameModeWidget;
 
 	/**
-	 * Main panel of the widget
+	 * All the Widgets necessary to create the GameCreation tab
 	 */
 	private final VerticalPanel vPanel = new VerticalPanel();
 	private final HTML fetchError = new HTML("Couldn't fetch list of games");
@@ -64,7 +56,6 @@ public class GameCreation extends SubPanel {
 	}
 
 	public Widget onCreationInitialize() {
-
 		vPanel.setSpacing(0);
 
 		// Attempts to Fetch the list of Available Game Names
@@ -74,7 +65,6 @@ public class GameCreation extends SubPanel {
 				vPanel.add(fetchError);
 			}
 
-			// Creates a ListBox with the returned list and a Button to start the game
 			@Override
 			public void onSuccess(List<String> result) {
 				initSelectGameMode(result);
@@ -200,6 +190,10 @@ public class GameCreation extends SubPanel {
 		});
 	}
 
+	/**
+	 * Prompts the server for a List of Available Game Infos, and populates the
+	 * GameIDList, depending on the currently selected game
+	 */
 	private void populateGameIDList() {
 		String name = gameList.getSelectedItemText();
 
@@ -229,6 +223,14 @@ public class GameCreation extends SubPanel {
 		gameIDList.setSelectedIndex(0);
 	}
 
+	/**
+	 * <ul>
+	 * Checks the selected gameID
+	 * <li>If it's been selected to create a new game, prompt the server to do so
+	 * <li>If an already existing game is selected, prompts the server to add the
+	 * player to it, after checking whether it's joinable
+	 * </ul>
+	 */
 	private void joinGame() {
 		String gameID = gameIDList.getSelectedValue();
 		String gameName = gameList.getSelectedItemText();
@@ -255,7 +257,11 @@ public class GameCreation extends SubPanel {
 			});
 		}
 	}
-	
+
+	/**
+	 * Creates a new Tab to Play, depending on the type of game. If the selected
+	 * game doesn't currently have enough players to start, adds bots until it does
+	 */
 	private void forceStartGame() {
 		String gameId = gameIDList.getSelectedValue();
 
@@ -273,7 +279,7 @@ public class GameCreation extends SubPanel {
 								: 4); i++) {
 							addBot(gameId);
 						}
-						
+
 						tabPanel.remove(2);
 						if ("WAR".equals(gameInfo.getGameName())) {
 							tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play");
@@ -286,11 +292,14 @@ public class GameCreation extends SubPanel {
 			}
 		});
 	}
-	
-	private void addBot(String gameId) {
 
-		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
-
+	/**
+	 * Prompts the server to add a bot to a Game with gameID
+	 * 
+	 * @param gameID - of game
+	 */
+	private void addBot(String gameID) {
+		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				messages.setHTML(caught.getMessage());

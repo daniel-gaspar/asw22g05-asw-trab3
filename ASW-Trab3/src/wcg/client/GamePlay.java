@@ -18,9 +18,12 @@ import wcg.shared.events.RoundUpdateEvent;
 import wcg.shared.events.SendCardsEvent;
 
 public abstract class GamePlay extends SubPanel {
-	
+
 	protected Widget gamePlay;
-	
+
+	/**
+	 * The main Widgets which compose a GamePlay panel
+	 */
 	private final DockPanel gamePlayPanel = new DockPanel();
 	private Widget centerPanel = new VerticalPanel();
 	private Widget southPanel = new VerticalPanel();
@@ -48,31 +51,45 @@ public abstract class GamePlay extends SubPanel {
 	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 5 * 1000; // 5 seconds
 
+	/**
+	 * Creates the structure for a GamePlay tab, and uses the Scheduler to prompt
+	 * the Server for existing events to process
+	 * 
+	 * @param gameId - of game
+	 */
 	protected GamePlay(String gameId) {
 		super(username, password);
 		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
 		processEvents();
-		/*Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-			@Override
-			public boolean execute() {
-				processEvents();
-				return true;
-			}	
-		}, TIMER_DELAY);*/
+		/*
+		 * Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+		 * 
+		 * @Override public boolean execute() { processEvents(); return true; } },
+		 * TIMER_DELAY);
+		 */
 	}
-	
+
+	/**
+	 * Creates a DockPanel and adds to it the centerPanel and the southPanel, which
+	 * initially are empty
+	 * 
+	 * @return gamePlayPanel
+	 */
 	private Widget onGamePlayInitialize() {
 		gamePlayPanel.setStyleName("cw-DockPanel");
 		gamePlayPanel.setSpacing(0);
 		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
-		
+
 		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
 		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
 
 		return gamePlayPanel;
 	}
-	
+
+	/**
+	 * @return the gamePlay Widget
+	 */
 	protected Widget getGamePlay() {
 		return gamePlay;
 	}
@@ -161,7 +178,7 @@ public abstract class GamePlay extends SubPanel {
 						mode = ((RoundUpdateEvent) event).getMode();
 
 						messages.setHTML("It is now " + hasTurn + "'s turn.");
-						
+
 						redoCenterPanel();
 					}
 					if (event instanceof RoundConclusionEvent) {
@@ -190,6 +207,26 @@ public abstract class GamePlay extends SubPanel {
 	}
 
 	/**
+	 * Removes the southPanel from the DockPanel, draws the Cards On Hand once more,
+	 * and adds this new southPanel again to the DockPanel
+	 */
+	private void redoSouthPanel() {
+		gamePlayPanel.remove(southPanel);
+		southPanel = drawCardsOnHand();
+		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
+	}
+
+	/**
+	 * Removes the centerPanel from the DockPanel, draws the Cards On Table once
+	 * more, and adds this new centerPanel again to the DockPanel
+	 */
+	private void redoCenterPanel() {
+		gamePlayPanel.remove(centerPanel);
+		centerPanel = drawCardsOnTable();
+		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
+	}
+
+	/**
 	 * Draw the cards currently on Player's hand
 	 */
 	protected abstract Widget drawCardsOnHand();
@@ -199,21 +236,4 @@ public abstract class GamePlay extends SubPanel {
 	 */
 	protected abstract Widget drawCardsOnTable();
 
-	/**
-	 * 
-	 */
-	private void redoSouthPanel() {
-		gamePlayPanel.remove(southPanel);
-		southPanel = drawCardsOnHand();
-		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
-	}
-
-	/**
-	 * 
-	 */
-	private void redoCenterPanel() {
-		gamePlayPanel.remove(centerPanel);
-		centerPanel = drawCardsOnTable();
-		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
-	}
 }

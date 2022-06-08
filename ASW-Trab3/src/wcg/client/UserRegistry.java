@@ -20,7 +20,9 @@ public class UserRegistry extends MainPanel {
 
 	private Widget userRegistry;
 
-	// Instantiates all the elements beforehand
+	/**
+	 * All the Widgets necessary to create the UserRegistry tab
+	 */
 	private final VerticalPanel vPanel = new VerticalPanel();
 	private final HTML usernameLabel = new HTML("Username: ");
 	private final TextBox usernameBox = new TextBox();
@@ -66,19 +68,20 @@ public class UserRegistry extends MainPanel {
 					@Override
 					public void onSuccess(Void result) {
 						messages.setHTML("Login successful");
-						
+
 						// Removes the tab Login/Register and replaces it with user info
 						tabPanel.remove(0);
-						tabPanel.insert(new HTML("Username: "+username),"User", 0);
+						tabPanel.insert(new HTML("Username: " + username), "User", 0);
 
 						// Removes the tab "Select Game" and replaces it with a new one
 						tabPanel.remove(1);
-						tabPanel.insert(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-								"Select Game",1);
-						
+						tabPanel.insert(
+								new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+								"Select Game", 1);
+
 						tabPanel.remove(2);
 						tabPanel.insert(new HTML("No game has been selected"), "Play", 2);
-						
+
 						tabPanel.selectTab(1);
 					}
 

@@ -25,7 +25,7 @@ public class CardGameException extends Exception implements Serializable {
 	 * @param writableStackTrace
 	 */
 	public CardGameException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		//super(message, cause, enableSuppression, writableStackTrace);
+		// super(message, cause, enableSuppression, writableStackTrace);
 	}
 
 	/**
@@ -33,20 +33,20 @@ public class CardGameException extends Exception implements Serializable {
 	 * @param cause
 	 */
 	public CardGameException(String message, Throwable cause) {
-		//super(message, cause);
+		// super(message, cause);
 	}
 
 	/**
 	 * @param message
 	 */
 	public CardGameException(String message) {
-		//super(message);
+		// super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
 	public CardGameException(Throwable cause) {
-		//super(cause);
+		// super(cause);
 	}
 }
