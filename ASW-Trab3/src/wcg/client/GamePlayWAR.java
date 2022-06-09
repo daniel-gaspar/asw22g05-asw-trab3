@@ -57,9 +57,9 @@ public class GamePlayWAR extends GamePlay {
 					} else {
 						cardsToPlay.add(getCardsOnHand().get(0));
 					}
-					
+
 					Logger logger = Logger.getLogger("nameOfLogger");
-					
+
 					logger.log(Level.SEVERE, cardsToPlay.toString());
 					logger.log(Level.SEVERE, getCardsOnHand().toString());
 

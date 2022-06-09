@@ -148,12 +148,12 @@ public class GameCreation extends SubPanel {
 				addToGame(gameID, gameName);
 
 				if (!selectGameToAddBotsPanel.isAttached()) {
-					
+
 					selectGameToAddBotsPanel.clear();
 					ownedGameIDList.clear();
-					
+
 					selectGameToAddBotsPanel.setSpacing(10);
-					
+
 					ownedGameIDList.ensureDebugId("cwListBox-multiBox");
 					ownedGameIDList.setWidth("11em");
 					ownedGameIDList.setMultipleSelect(false);
@@ -165,16 +165,15 @@ public class GameCreation extends SubPanel {
 							forceStartGame();
 						}
 					});
-					
+
 					selectGameToAddBotsPanel.add(ownedGamesLabel);
 					selectGameToAddBotsPanel.add(ownedGameIDList);
 					selectGameToAddBotsPanel.add(btnAddBots);
-					
+
 					selectGamePanel.add(selectGameToAddBotsPanel);
 				}
-				
-				String itemForList = gameID + " - 1/"
-						+ AuxMethods.numberOfPlayers(gameName);
+
+				String itemForList = gameID + " - 1/" + AuxMethods.numberOfPlayers(gameName);
 				ownedGameIDList.addItem(itemForList, gameID);
 				ownedGameIDList.setSelectedIndex(0);
 			}
@@ -312,9 +311,9 @@ public class GameCreation extends SubPanel {
 						}
 					}
 				}
-				
+
 				ownedGameIDList.removeItem(ownedGameIDList.getSelectedIndex());
-				if(ownedGameIDList.getItemCount() == 0)
+				if (ownedGameIDList.getItemCount() == 0)
 					selectGamePanel.remove(selectGameToAddBotsPanel);
 			}
 		});

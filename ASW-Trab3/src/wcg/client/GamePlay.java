@@ -50,7 +50,7 @@ public abstract class GamePlay extends SubPanel {
 
 	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 500;
-	
+
 	private boolean repeat = true;
 
 	/**
@@ -69,7 +69,8 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public boolean execute() {
-				if(repeat) processEvents();
+				if (repeat)
+					processEvents();
 				return repeat;
 			}
 		}, TIMER_DELAY);
@@ -202,13 +203,14 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((GameEndEvent) event).getRoundsCompleted();
 						winner = ((GameEndEvent) event).getWinner();
 						points = ((GameEndEvent) event).getPoints();
-						
+
 						repeat = false;
 
-						systemMessages.setHTML(winner + " has won " + gameID + " with " + points.get(winner) + " points.");
-						
+						systemMessages
+								.setHTML(winner + " has won " + gameID + " with " + points.get(winner) + " points.");
+
 						tabPanel.remove(gameID);
-						
+
 						tabPanel.selectTab(SELECT_GAME_TAB);
 					}
 				}

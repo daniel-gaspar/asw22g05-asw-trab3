@@ -67,14 +67,15 @@ public class UserRegistry extends MainPanel {
 					@Override
 					public void onSuccess(Void result) {
 						systemMessages.setHTML("Login successful");
-						
+
 						tabPanel.clear();
-						
-						//Adds a new tab with only the Username
+
+						// Adds a new tab with only the Username
 						tabPanel.add(new HTML("Username: " + username), "User");
 
-						//Adds a new "Select Game" tab
-						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(), "Select Game", SELECT_GAME_TAB);
+						// Adds a new "Select Game" tab
+						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+								"Select Game", SELECT_GAME_TAB);
 
 						tabPanel.selectTab(1);
 					}
