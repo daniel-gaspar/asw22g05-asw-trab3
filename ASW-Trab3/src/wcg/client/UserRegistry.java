@@ -62,7 +62,7 @@ public class UserRegistry extends MainPanel {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						messages.setHTML("Login not successful: " + caught.getLocalizedMessage());
+						messages.setHTML("Login not successful: " + caught.getMessage());
 					}
 
 					@Override
