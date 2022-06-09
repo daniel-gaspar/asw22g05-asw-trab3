@@ -1,8 +1,12 @@
 package wcg.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -45,18 +49,28 @@ public class GamePlayHEARTS extends GamePlay {
 			card.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
+					Logger logger = Logger.getLogger("nameOfLogger");
+					
+					logger.log(Level.SEVERE, c.toString());
+					logger.log(Level.SEVERE, getCardsOnHand().toString());
+					
 					cardGameService.playCards(getGameId(), username, password, Arrays.asList(c),
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									messages.setHTML(caught.getMessage());
+									logger.log(Level.SEVERE, getGameId());
+									logger.log(Level.SEVERE, username);
+									logger.log(Level.SEVERE, password);
+									logger.log(Level.SEVERE, c.toString());
+									logger.log(Level.SEVERE, "Not managing to play");
 								}
 
 								@Override
 								public void onSuccess(Void result) {
+									logger.log(Level.SEVERE,"Successful play");
 									getCardsOnHand().remove(c);
-									Image cardToRemove = (Image) event.getSource();
-									cardToRemove.removeFromParent();
+									card.removeFromParent();
 								}
 							});
 				}
@@ -84,6 +98,8 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
+
 
 		playerPosition.put(username, DockPanel.SOUTH);
 
