@@ -2,6 +2,8 @@ package wcg.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,11 +52,16 @@ public class GamePlayWAR extends GamePlay {
 					List<Card> cardsToPlay = new ArrayList<>();
 
 					if ("War".equals(getMode())) {
-						for (int i = 0; i < 2; i++)
+						for (int i = 0; i < 3; i++)
 							cardsToPlay.add(getCardsOnHand().get(i));
 					} else {
 						cardsToPlay.add(getCardsOnHand().get(0));
 					}
+					
+					Logger logger = Logger.getLogger("nameOfLogger");
+					
+					logger.log(Level.SEVERE, cardsToPlay.toString());
+					logger.log(Level.SEVERE, getCardsOnHand().toString());
 
 					cardGameService.playCards(getGameId(), username, password, cardsToPlay, new AsyncCallback<Void>() {
 						@Override
