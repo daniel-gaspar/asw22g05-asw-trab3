@@ -287,6 +287,7 @@ public class GameCreation extends SubPanel {
 						if ("HEARTS".equals(gameInfo.getGameName())) {
 							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play");
 						}
+						tabPanel.selectTab(2);
 					}
 				}
 			}
