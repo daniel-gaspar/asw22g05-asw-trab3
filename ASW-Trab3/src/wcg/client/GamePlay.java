@@ -49,7 +49,7 @@ public abstract class GamePlay extends SubPanel {
 	private List<Card> cardsOnHand = new ArrayList<>();
 
 	// To schedule the processEvents routine
-	private static final int TIMER_DELAY = 100;
+	private static final int TIMER_DELAY = 500;
 
 	/**
 	 * Creates the structure for a GamePlay tab, and uses the Scheduler to prompt
