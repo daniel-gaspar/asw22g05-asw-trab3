@@ -58,7 +58,7 @@ public class WaitingTab extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -71,14 +71,14 @@ public class WaitingTab extends SubPanel {
 					if(currentGameID.equals(gameID)) {
 						if(currentPlayersCount == AuxMethods.numberOfPlayers(currentGameName)) {
 							repeat = false;
-							tabPanel.remove(2);
+							tabPanel.remove(gameID);
 							if("WAR".equals(currentGameName)) {
-								tabPanel.add(new GamePlayWAR(gameID).getGamePlay(), gameID);
+								tabPanel.add(new GamePlayWAR(gameID).getGamePlay(), "Play: " + gameID,  gameID);
 							}
 							if("HEARTS".equals(currentGameName)) {
-								tabPanel.add(new GamePlayHEARTS(gameID).getGamePlay(), gameID);
+								tabPanel.add(new GamePlayHEARTS(gameID).getGamePlay(), "Play: "+ gameID,  gameID);
 							}
-							tabPanel.selectTab(2);
+							tabPanel.selectTab(gameID);
 						}
 					}
 				}
@@ -89,7 +89,7 @@ public class WaitingTab extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -124,12 +124,12 @@ public class WaitingTab extends SubPanel {
 		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				messages.setHTML("Bot added");
+				systemMessages.setHTML("Bot added");
 			}
 		});
 	}
