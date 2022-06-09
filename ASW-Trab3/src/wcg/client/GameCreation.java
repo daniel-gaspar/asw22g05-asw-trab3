@@ -27,6 +27,7 @@ import wcg.shared.GameInfo;
 public class GameCreation extends SubPanel {
 
 	private static final String NEW_GAME_STRING = "New Game...";
+	private static final boolean FLAG_IS_OWNER = true;
 
 	private Widget gameCreation;
 	private Widget selectGameModeWidget;
@@ -139,7 +140,7 @@ public class GameCreation extends SubPanel {
 			@Override
 			public void onSuccess(String gameID) {
 				tabPanel.remove(2);
-				tabPanel.add(new WaitingTab(gameID).getWaitingTab(), gameID);
+				tabPanel.add(new WaitingTab(gameID, FLAG_IS_OWNER).getWaitingTab(), gameID);
 				tabPanel.selectTab(2);
 				btnStartGame.addClickHandler(new ClickHandler() {
 					@Override
@@ -162,9 +163,7 @@ public class GameCreation extends SubPanel {
 	 * @return Whether the game can be joined or not
 	 */
 	private boolean isJoinable(String name, int currentPlayers) {
-		if ("HEARTS".equals(name) && currentPlayers < 4)
-			return true;
-		if ("WAR".equals(name) && currentPlayers < 2)
+		if (currentPlayers < AuxMethods.numberOfPlayers(name))
 			return true;
 		return false;
 	}
@@ -213,7 +212,7 @@ public class GameCreation extends SubPanel {
 				for (GameInfo gameInfo : availableGameInfos) {
 					if (gameInfo.getGameName().equals(name)) {
 						String itemForList = gameInfo.getGameId() + " - " + gameInfo.getPlayersCount() + "/"
-								+ ("WAR".equals(name) ? "2" : "4");
+								+ AuxMethods.numberOfPlayers(name);
 						gameIDList.addItem(itemForList, gameInfo.getGameId());
 					}
 				}
@@ -254,7 +253,7 @@ public class GameCreation extends SubPanel {
 								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
 							addToGame(gameID, gameName);
 							tabPanel.remove(2);
-							tabPanel.add(new WaitingTab(gameID).getWaitingTab(), gameID);
+							tabPanel.add(new WaitingTab(gameID, !FLAG_IS_OWNER).getWaitingTab(), gameID);
 							tabPanel.selectTab(2);
 						}
 					}
@@ -268,7 +267,7 @@ public class GameCreation extends SubPanel {
 	 * game doesn't currently have enough players to start, adds bots until it does
 	 */
 	private void forceStartGame() {
-		String gameId = gameIDList.getSelectedValue();
+		String gameID = gameIDList.getSelectedValue();
 
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
@@ -279,20 +278,10 @@ public class GameCreation extends SubPanel {
 			@Override
 			public void onSuccess(List<GameInfo> availableGameInfos) {
 				for (GameInfo gameInfo : availableGameInfos) {
-					if (gameInfo.getGameId().equals(gameId)) {
-						for (int i = gameInfo.getPlayersCount(); i < ("WAR".equals(gameInfo.getGameName()) ? 2
-								: 4); i++) {
-							addBot(gameId);
+					if (gameInfo.getGameId().equals(gameID)) {
+						for (int i = gameInfo.getPlayersCount(); i < AuxMethods.numberOfPlayers(gameInfo.getGameName()); i++) {
+							addBot(gameID);
 						}
-
-						/*tabPanel.remove(2);
-						if ("WAR".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play");
-						}
-						if ("HEARTS".equals(gameInfo.getGameName())) {
-							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play");
-						}
-						tabPanel.selectTab(2);*/
 					}
 				}
 			}
