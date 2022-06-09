@@ -6,7 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,7 +28,7 @@ public class UserRegistry extends MainPanel {
 	private final HTML passwordLabel = new HTML("Password: ");
 	private final PasswordTextBox passwordBox = new PasswordTextBox();
 
-	public UserRegistry(TabPanel tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
+	public UserRegistry(TabPanelTitles tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
 		super(tabPanel, cardGameService, messages);
 		this.userRegistry = onRegisterInitialize();
 	}
@@ -62,31 +61,24 @@ public class UserRegistry extends MainPanel {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						messages.setHTML("Login not successful: " + caught.getMessage());
+						systemMessages.setHTML("Login not successful: " + caught.getMessage());
 					}
 
 					@Override
 					public void onSuccess(Void result) {
-						messages.setHTML("Login successful");
+						systemMessages.setHTML("Login successful");
+						
+						tabPanel.clear();
+						
+						//Adds a new tab with only the Username
+						tabPanel.add(new HTML("Username: " + username), "User");
 
-						// Removes the tab Login/Register and replaces it with user info
-						tabPanel.remove(0);
-						tabPanel.insert(new HTML("Username: " + username), "User", 0);
-
-						// Removes the tab "Select Game" and replaces it with a new one
-						tabPanel.remove(1);
-						tabPanel.insert(
-								new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-								"Select Game", 1);
-
-						tabPanel.remove(2);
-						tabPanel.insert(new HTML("No game has been selected"), "Play", 2);
+						//Adds a new "Select Game" tab
+						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(), "Select Game", SELECT_GAME_TAB);
 
 						tabPanel.selectTab(1);
 					}
-
 				});
-
 			}
 		});
 		registerButton.ensureDebugId("cwBasicButton-normal");
