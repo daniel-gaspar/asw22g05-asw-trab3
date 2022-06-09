@@ -41,11 +41,14 @@ public class GameCreation extends SubPanel {
 	private final VerticalPanel selectGameModePanel = new VerticalPanel();
 	private final ListBox gameList = new ListBox();
 	private final VerticalPanel selectGameIDPanel = new VerticalPanel();
-	private final HTML gameModeListLabel = new HTML("List of Games: ");
+	private final HTML gameModeListLabel = new HTML("List of Games:");
 	private final ListBox gameIDList = new ListBox();
-	private final HTML avlbGamesLabel = new HTML("Available Games");
+	private final HTML avlbGamesLabel = new HTML("Available Games:");
 	private final Button btnJoinGame = new Button("Join Game");
-	private final Button btnStartGame = new Button("Start Game");
+	private final VerticalPanel selectGameToAddBotsPanel = new VerticalPanel();
+	private final HTML ownedGamesLabel = new HTML("Owned Games:");
+	private final ListBox ownedGameIDList = new ListBox();
+	private final Button btnAddBots = new Button("Add Bots to Game");
 
 	public GameCreation(TabPanel tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
 		super(username, password);
@@ -134,22 +137,46 @@ public class GameCreation extends SubPanel {
 		cardGameService.createGame(gameName, new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML("Failed to create a game: " + caught.getCause());
+				systemMessages.setHTML("Failed to create a game: " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(String gameID) {
-				tabPanel.remove(2);
-				tabPanel.add(new WaitingTab(gameID, FLAG_IS_OWNER).getWaitingTab(), gameID);
-				tabPanel.selectTab(2);
-				btnStartGame.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						forceStartGame();
-					}
-				});
-				selectGameIDPanel.add(btnStartGame);
+				tabPanel.add(new WaitingTab(gameID, FLAG_IS_OWNER).getWaitingTab(), "Play: " + gameID, gameID);
+				tabPanel.selectTab(gameID);
+
 				addToGame(gameID, gameName);
+
+				if (!selectGameToAddBotsPanel.isAttached()) {
+					
+					selectGameToAddBotsPanel.clear();
+					ownedGameIDList.clear();
+					
+					selectGameToAddBotsPanel.setSpacing(10);
+					
+					ownedGameIDList.ensureDebugId("cwListBox-multiBox");
+					ownedGameIDList.setWidth("11em");
+					ownedGameIDList.setMultipleSelect(false);
+					ownedGameIDList.setVisibleItemCount(10);
+
+					btnAddBots.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							forceStartGame();
+						}
+					});
+					
+					selectGameToAddBotsPanel.add(ownedGamesLabel);
+					selectGameToAddBotsPanel.add(ownedGameIDList);
+					selectGameToAddBotsPanel.add(btnAddBots);
+					
+					selectGamePanel.add(selectGameToAddBotsPanel);
+				}
+				
+				String itemForList = gameID + " - 1/"
+						+ AuxMethods.numberOfPlayers(gameName);
+				ownedGameIDList.addItem(itemForList, gameID);
+				ownedGameIDList.setSelectedIndex(0);
 			}
 		});
 	}
@@ -180,12 +207,12 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				messages.setHTML("Game successfully joined " + gameId + ". You can now Start the Game");
+				systemMessages.setHTML("Game successfully joined " + gameId + ". You can now Start the Game");
 				populateGameIDList();
 			}
 		});
@@ -204,7 +231,7 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -237,13 +264,13 @@ public class GameCreation extends SubPanel {
 		String gameName = gameList.getSelectedItemText();
 
 		if (gameID.equals(NEW_GAME_STRING)) {
-			createGame(gameName);	
+			createGame(gameName);
 		} else {
 			cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					messages.setHTML(caught.getMessage());
+					systemMessages.setHTML(caught.getMessage());
 				}
 
 				@Override
@@ -252,9 +279,9 @@ public class GameCreation extends SubPanel {
 						if (gameInfo.getGameId().equals(gameID)
 								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
 							addToGame(gameID, gameName);
-							tabPanel.remove(2);
-							tabPanel.add(new WaitingTab(gameID, !FLAG_IS_OWNER).getWaitingTab(), gameID);
-							tabPanel.selectTab(2);
+							tabPanel.add(new WaitingTab(gameID, !FLAG_IS_OWNER).getWaitingTab(), "Play: " + gameID,
+									gameID);
+							tabPanel.selectTab(gameID);
 						}
 					}
 				}
@@ -267,23 +294,28 @@ public class GameCreation extends SubPanel {
 	 * game doesn't currently have enough players to start, adds bots until it does
 	 */
 	private void forceStartGame() {
-		String gameID = gameIDList.getSelectedValue();
+		String gameID = ownedGameIDList.getSelectedValue();
 
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(List<GameInfo> availableGameInfos) {
 				for (GameInfo gameInfo : availableGameInfos) {
 					if (gameInfo.getGameId().equals(gameID)) {
-						for (int i = gameInfo.getPlayersCount(); i < AuxMethods.numberOfPlayers(gameInfo.getGameName()); i++) {
+						for (int i = gameInfo.getPlayersCount(); i < AuxMethods
+								.numberOfPlayers(gameInfo.getGameName()); i++) {
 							addBot(gameID);
 						}
 					}
 				}
+				
+				ownedGameIDList.removeItem(ownedGameIDList.getSelectedIndex());
+				if(ownedGameIDList.getItemCount() == 0)
+					selectGamePanel.remove(selectGameToAddBotsPanel);
 			}
 		});
 	}
@@ -297,12 +329,12 @@ public class GameCreation extends SubPanel {
 		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				messages.setHTML("Bot added");
+				systemMessages.setHTML("Bot added");
 			}
 		});
 	}
