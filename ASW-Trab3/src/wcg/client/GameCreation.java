@@ -115,17 +115,9 @@ public class GameCreation extends SubPanel {
 			}
 		});
 
-		btnStartGame.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				forceStartGame();
-			}
-		});
-
 		selectGameIDPanel.add(avlbGamesLabel);
 		selectGameIDPanel.add(gameIDList);
 		selectGameIDPanel.add(btnJoinGame);
-		selectGameIDPanel.add(btnStartGame);
 		selectGamePanel.add(selectGameIDPanel);
 
 		selectGameModeWidget = selectGamePanel;
@@ -145,8 +137,18 @@ public class GameCreation extends SubPanel {
 			}
 
 			@Override
-			public void onSuccess(String gameId) {
-				addToGame(gameId, gameName);
+			public void onSuccess(String gameID) {
+				tabPanel.remove(2);
+				tabPanel.add(new WaitingTab(gameID).getWaitingTab(), gameID);
+				tabPanel.selectTab(2);
+				btnStartGame.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						forceStartGame();
+					}
+				});
+				selectGameIDPanel.add(btnStartGame);
+				addToGame(gameID, gameName);
 			}
 		});
 	}
@@ -236,7 +238,7 @@ public class GameCreation extends SubPanel {
 		String gameName = gameList.getSelectedItemText();
 
 		if (gameID.equals(NEW_GAME_STRING)) {
-			createGame(gameName);
+			createGame(gameName);	
 		} else {
 			cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 
@@ -251,6 +253,9 @@ public class GameCreation extends SubPanel {
 						if (gameInfo.getGameId().equals(gameID)
 								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
 							addToGame(gameID, gameName);
+							tabPanel.remove(2);
+							tabPanel.add(new WaitingTab(gameID).getWaitingTab(), gameID);
+							tabPanel.selectTab(2);
 						}
 					}
 				}
@@ -280,14 +285,14 @@ public class GameCreation extends SubPanel {
 							addBot(gameId);
 						}
 
-						tabPanel.remove(2);
+						/*tabPanel.remove(2);
 						if ("WAR".equals(gameInfo.getGameName())) {
 							tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play");
 						}
 						if ("HEARTS".equals(gameInfo.getGameName())) {
 							tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play");
 						}
-						tabPanel.selectTab(2);
+						tabPanel.selectTab(2);*/
 					}
 				}
 			}
