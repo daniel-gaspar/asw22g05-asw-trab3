@@ -251,7 +251,7 @@ public abstract class GameMaster extends ObservableGame {
 			throw new CardGameException("Please enter a valid nick");
 		if (!players.getPlayerNicks().contains(nick))
 			throw new CardGameException(nick + " is not in this game");
-		if (isWithTurns() && !(nick == getNickWithTurn()))
+		if (isWithTurns() && !(nick.equals(getNickWithTurn())))
 			throw new CardGameException(nick + ", it is not your turn");
 
 		checkCards(nick, Arrays.asList(card));
@@ -302,7 +302,7 @@ public abstract class GameMaster extends ObservableGame {
 			throw new CardGameException("Please enter a valid nick");
 		if (!players.getPlayerNicks().contains(nick))
 			throw new CardGameException(nick + " is not in this game");
-		if (isWithTurns() && !(nick == getNickWithTurn()))
+		if (isWithTurns() && !(nick.equals(getNickWithTurn())))
 			throw new CardGameException(nick + ", it is not your turn");
 
 		checkCards(nick, cards);
