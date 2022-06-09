@@ -13,7 +13,7 @@ public abstract class SubPanel extends MainPanel {
 	protected static String password;
 
 	public SubPanel(String username, String password) {
-		super(tabPanel, cardGameService, messages);
+		super(tabPanel, cardGameService, systemMessages);
 		SubPanel.username = username;
 		SubPanel.password = password;
 	}
