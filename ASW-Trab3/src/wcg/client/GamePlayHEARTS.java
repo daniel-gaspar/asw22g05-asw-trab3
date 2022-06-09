@@ -1,12 +1,10 @@
 package wcg.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.HashMap;
-import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -96,12 +94,15 @@ public class GamePlayHEARTS extends GamePlay {
 	@Override
 	protected Widget drawCardsOnTable() {
 		cardsOnTablePanel.clear();
+		//cardsOnTablePanel.setSize("400px", "400px");
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
 
 
 		playerPosition.put(username, DockPanel.SOUTH);
+		
+		int i = 0;
 
 		for (String key : getOnTable().keySet()) {
 			if (!playerPosition.containsKey(key)) {
@@ -113,6 +114,12 @@ public class GamePlayHEARTS extends GamePlay {
 			playerContainer.add(Cards.createCard(card));
 			playerContainer.add(new HTML("Player: " + key));
 			cardsOnTablePanel.add(playerContainer, playerPosition.get(key));
+			i++;
+		}
+		
+		while(i<4) {
+			VerticalPanel playerContainer = new VerticalPanel();
+			
 		}
 
 		return cardsOnTablePanel;
