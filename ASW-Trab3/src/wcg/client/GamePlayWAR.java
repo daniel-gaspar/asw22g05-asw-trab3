@@ -66,7 +66,7 @@ public class GamePlayWAR extends GamePlay {
 					cardGameService.playCards(getGameId(), username, password, cardsToPlay, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
-							messages.setHTML(caught.getMessage());
+							systemMessages.setHTML(caught.getMessage());
 						}
 
 						@Override

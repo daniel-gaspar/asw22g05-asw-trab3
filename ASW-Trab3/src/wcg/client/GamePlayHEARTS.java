@@ -1,12 +1,10 @@
 package wcg.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,7 +28,7 @@ public class GamePlayHEARTS extends GamePlay {
 	private final DockPanel cardsOnTablePanel = new DockPanel();
 	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
 
-	private Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
+	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
@@ -58,7 +56,7 @@ public class GamePlayHEARTS extends GamePlay {
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									messages.setHTML(caught.getMessage());
+									systemMessages.setHTML(caught.getMessage());
 									logger.log(Level.SEVERE, getGameId());
 									logger.log(Level.SEVERE, username);
 									logger.log(Level.SEVERE, password);
