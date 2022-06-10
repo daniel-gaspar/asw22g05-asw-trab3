@@ -48,6 +48,7 @@ public class Cards {
 	protected static Image createCard(String name) {
 		
 		Image image = new Image(IMAGE_LOCATION + name + FILE_EXTENSION);
+		image.setPixelSize(83, 120);
 		
 		return image;
 	}
