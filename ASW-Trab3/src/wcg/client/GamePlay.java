@@ -29,7 +29,7 @@ public abstract class GamePlay extends SubPanel {
 	private Widget southPanel = new VerticalPanel();
 
 	// To process all events
-	private String gameId;
+	private String gameID;
 
 	// To process RoundUpdateEvent, RoundConclusionEvent, GameEndEvent
 	private Map<String, List<Card>> onTable;
@@ -46,10 +46,12 @@ public abstract class GamePlay extends SubPanel {
 	private String mode;
 
 	// To process SendCardsEvent
-	private List<Card> cardsOnHand = new ArrayList<>();
+	private final List<Card> cardsOnHand = new ArrayList<>();
 
 	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 500;
+
+	private boolean repeat = true;
 
 	/**
 	 * Creates the structure for a GamePlay tab, and uses the Scheduler to prompt
@@ -59,7 +61,7 @@ public abstract class GamePlay extends SubPanel {
 	 */
 	protected GamePlay(String gameId) {
 		super(username, password);
-		this.gameId = gameId;
+		this.gameID = gameId;
 		gamePlay = onGamePlayInitialize();
 		processEvents();
 
@@ -67,8 +69,9 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public boolean execute() {
-				processEvents();
-				return true;
+				if (repeat)
+					processEvents();
+				return repeat;
 			}
 		}, TIMER_DELAY);
 
@@ -85,7 +88,7 @@ public abstract class GamePlay extends SubPanel {
 		gamePlayPanel.setSpacing(0);
 		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
-		gamePlayPanel.add(centerPanel, DockPanel.NORTH);
+		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
 		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
 
 		return gamePlayPanel;
@@ -102,7 +105,7 @@ public abstract class GamePlay extends SubPanel {
 	 * @return the gameId
 	 */
 	protected String getGameId() {
-		return gameId;
+		return gameID;
 	}
 
 	/**
@@ -162,7 +165,7 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				messages.setHTML(caught.getMessage());
+				systemMessages.setHTML(caught.getMessage());
 			}
 
 			@Override
@@ -171,7 +174,7 @@ public abstract class GamePlay extends SubPanel {
 					if (event instanceof SendCardsEvent) {
 						cardsOnHand.addAll(((SendCardsEvent) event).getCards());
 
-						messages.setHTML("Cards have been given.");
+						systemMessages.setHTML("Cards have been given.");
 
 						redoSouthPanel();
 					}
@@ -181,7 +184,7 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundUpdateEvent) event).getRoundsCompleted();
 						mode = ((RoundUpdateEvent) event).getMode();
 
-						messages.setHTML("It is now " + hasTurn + "'s turn.");
+						systemMessages.setHTML("It is now " + hasTurn + "'s turn.");
 
 						redoCenterPanel();
 					}
@@ -190,7 +193,7 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
 
-						messages.setHTML(
+						systemMessages.setHTML(
 								"Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
 
 						redoCenterPanel();
@@ -201,9 +204,14 @@ public abstract class GamePlay extends SubPanel {
 						winner = ((GameEndEvent) event).getWinner();
 						points = ((GameEndEvent) event).getPoints();
 
-						messages.setHTML(winner + " has won the game with " + points.get(winner) + " points.");
+						repeat = false;
 
-						redoCenterPanel();
+						systemMessages
+								.setHTML(winner + " has won " + gameID + " with " + points.get(winner) + " points.");
+
+						tabPanel.remove(gameID);
+
+						tabPanel.selectTab(SELECT_GAME_TAB);
 					}
 				}
 			}
@@ -227,7 +235,7 @@ public abstract class GamePlay extends SubPanel {
 	private void redoCenterPanel() {
 		gamePlayPanel.remove(centerPanel);
 		centerPanel = drawCardsOnTable();
-		gamePlayPanel.add(centerPanel, DockPanel.NORTH);
+		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
 	}
 
 	/**

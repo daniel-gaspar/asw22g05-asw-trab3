@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+<<<<<<< HEAD
+=======
+import java.util.HashMap;
+>>>>>>> 861ea01985551aba51919400f8c0dd15497b8e3f
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,7 +32,7 @@ public class GamePlayHEARTS extends GamePlay {
 	private final DockPanel cardsOnTablePanel = new DockPanel();
 	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
 
-	private Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
+	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
@@ -48,15 +52,15 @@ public class GamePlayHEARTS extends GamePlay {
 				@Override
 				public void onClick(ClickEvent event) {
 					Logger logger = Logger.getLogger("nameOfLogger");
-					
+
 					logger.log(Level.SEVERE, c.toString());
 					logger.log(Level.SEVERE, getCardsOnHand().toString());
-					
+
 					cardGameService.playCards(getGameId(), username, password, Arrays.asList(c),
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									messages.setHTML(caught.getMessage());
+									systemMessages.setHTML(caught.getMessage());
 									logger.log(Level.SEVERE, getGameId());
 									logger.log(Level.SEVERE, username);
 									logger.log(Level.SEVERE, password);
@@ -66,7 +70,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 								@Override
 								public void onSuccess(Void result) {
-									logger.log(Level.SEVERE,"Successful play");
+									logger.log(Level.SEVERE, "Successful play");
 									getCardsOnHand().remove(c);
 									card.removeFromParent();
 								}
@@ -98,7 +102,6 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
-
 
 		playerPosition.put(username, DockPanel.SOUTH);
 		
