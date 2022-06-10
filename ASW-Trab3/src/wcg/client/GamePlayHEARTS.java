@@ -1,5 +1,6 @@
 package wcg.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ public class GamePlayHEARTS extends GamePlay {
 	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
 
 	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
+	public static final DockLayoutConstant[] order = {DockPanel.SOUTH,DockPanel.EAST,DockPanel.NORTH,DockPanel.WEST};
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
@@ -99,6 +101,11 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
+		
+		VerticalPanel playerContainer = new VerticalPanel();
+		
+		
+		int i = 0;
 
 		for (String key : getOnTable().keySet()) {
 			if (!playerPosition.containsKey(key)) {
@@ -106,10 +113,19 @@ public class GamePlayHEARTS extends GamePlay {
 			}
 
 			Card card = getOnTable().get(key).get(0);
-			VerticalPanel playerContainer = new VerticalPanel();
 			playerContainer.add(Cards.createCard(card));
 			playerContainer.add(new HTML("Player: " + key));
 			cardsOnTablePanel.add(playerContainer, playerPosition.get(key));
+			i++;
+		}
+		
+		
+		
+		while(i<4) {
+			//VerticalPanel playerContainer = new VerticalPanel();
+			playerContainer.add(Cards.createCard("facedown"));
+			cardsOnTablePanel.add(playerContainer, order[i]);
+			i++;
 		}
 
 		return cardsOnTablePanel;
