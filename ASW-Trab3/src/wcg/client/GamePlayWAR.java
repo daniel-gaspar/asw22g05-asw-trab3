@@ -1,7 +1,9 @@
 package wcg.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -26,6 +29,10 @@ public class GamePlayWAR extends GamePlay {
 	 */
 	private final DockPanel cardsOnTablePanel = new DockPanel();
 	private final DeckPanel cardsOnHandPanel = new DeckPanel();
+
+	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
+	private final Map<DockLayoutConstant, Widget> cardsPlacement = new HashMap<>();
+	private static final DockLayoutConstant[] order = { DockPanel.SOUTH, DockPanel.NORTH };
 
 	public GamePlayWAR(String gameId) {
 		super(gameId);
@@ -113,8 +120,16 @@ public class GamePlayWAR extends GamePlay {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
+
+		playerPosition.put(username, DockPanel.SOUTH);
+
+		cardsPlacement.clear();
 
 		for (String key : getOnTable().keySet()) {
+			if (!playerPosition.containsKey(key))
+				playerPosition.put(key, DockPanel.NORTH);
+
 			VerticalPanel playerContainer = new VerticalPanel();
 			HorizontalPanel cardsContainer = new HorizontalPanel();
 			cardsContainer.clear();
@@ -123,7 +138,34 @@ public class GamePlayWAR extends GamePlay {
 			}
 			playerContainer.add(cardsContainer);
 			playerContainer.add(new HTML("Player: " + key));
-			cardsOnTablePanel.add(playerContainer, (username.equals(key) ? DockPanel.SOUTH : DockPanel.NORTH));
+
+			cardsPlacement.put(playerPosition.get(key), playerContainer);
+		}
+
+		for (DockLayoutConstant position : order) {
+			if (!cardsPlacement.containsKey(position)) {
+				VerticalPanel playerContainer = new VerticalPanel();
+				HorizontalPanel cardsContainer = new HorizontalPanel();
+				cardsContainer.clear();
+
+				for (int i = 0; i < ("War".equals(getMode()) ? 3 : 1); i++) {
+					cardsContainer.add(Cards.createCard("facedown"));
+				}
+
+				playerContainer.add(cardsContainer);
+
+				HTML playerName = new HTML("Player: Opponent");
+
+				for (String player : playerPosition.keySet()) {
+					if (position.equals(playerPosition.get(player)))
+						playerName = new HTML("Player: " + player);
+				}
+
+				playerContainer.add(playerName);
+
+				cardsPlacement.put(position, playerContainer);
+			}
+			cardsOnTablePanel.add(cardsPlacement.get(position), position);
 		}
 
 		return cardsOnTablePanel;
