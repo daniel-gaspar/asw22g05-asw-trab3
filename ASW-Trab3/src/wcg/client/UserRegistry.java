@@ -60,9 +60,9 @@ public class UserRegistry extends MainPanel {
 				String password = passwordBox.getText().toString();
 
 				if (!FieldVerifier.isValidName(username))
-					systemMessages.setHTML("Invalid user, must have 3 or more characters");
+					systemMessages.setHTML("Invalid user, must have 4 or more characters");
 				else if (!FieldVerifier.isValidName(password))
-					systemMessages.setHTML("Invalid password, must have 3 or more characters");
+					systemMessages.setHTML("Invalid password, must have 4 or more characters");
 				else {
 					System.out.println("username: " + username + " | pwd: " + password);
 					cardGameService.registerPlayer(username, password, new AsyncCallback<Void>() {
