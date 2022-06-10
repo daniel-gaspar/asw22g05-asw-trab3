@@ -187,15 +187,15 @@ public abstract class GamePlay extends SubPanel {
 						String messageToSet;
 						String gameSection = gameID + ": ";
 						String turnSection = "Cards have been played.";
-						
-						if(hasTurn != null)
-							if(username.equals(hasTurn))
+
+						if (hasTurn != null)
+							if (username.equals(hasTurn))
 								turnSection = "It is now your turn";
 							else
 								turnSection = "It is now " + hasTurn + "'s turn.";
-						
+
 						messageToSet = gameSection + turnSection;
-						
+
 						systemMessages.setHTML(messageToSet);
 
 						redoCenterPanel();
@@ -204,21 +204,21 @@ public abstract class GamePlay extends SubPanel {
 						onTable = ((RoundConclusionEvent) event).getCardsOnTable();
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
-						
+
 						String messageToSet;
 						String roundsSection = gameID + ": Round #" + roundsCompleted + "is complete. ";
 						String turnSection = "";
-						
-						if(hasTurn != null)
-							if(username.equals(hasTurn))
+
+						if (hasTurn != null)
+							if (username.equals(hasTurn))
 								turnSection = "It is now your turn.";
 							else
 								turnSection = "It is now " + hasTurn + "'s turn.";
-						
+
 						messageToSet = roundsSection + turnSection;
-						
+
 						systemMessages.setHTML(messageToSet);
-		
+
 						redoCenterPanel();
 					}
 					if (event instanceof GameEndEvent) {
