@@ -161,7 +161,7 @@ public abstract class GamePlay extends SubPanel {
 	 * Requests a list of Recent Events from the server, and processes them
 	 */
 	private void processEvents() {
-		cardGameService.getRecentEvents(username, password, new AsyncCallback<List<GameEvent>>() {
+		cardGameService.getRecentEvents(gameID, username, password, new AsyncCallback<List<GameEvent>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

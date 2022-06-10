@@ -166,8 +166,8 @@ public class Manager implements ManagerInterface {
 	 * @throws CardGameException - if authentication fails
 	 */
 	@Override
-	public List<GameEvent> getRecentEvents(String nick, String password) throws CardGameException {
+	public List<GameEvent> getRecentEvents(String gameID, String nick, String password) throws CardGameException {
 		User user = userPool.getUser(nick, password);
-		return user.getRecentEvents();
+		return user.getRecentEvents(gameID);
 	}
 }
