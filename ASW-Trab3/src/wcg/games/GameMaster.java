@@ -172,10 +172,7 @@ public abstract class GameMaster extends ObservableGame {
 		players.addPlayer(player, comparator);
 		addObserver(player.getNick(), player);
 
-		GameInfo currentInfo = info;
-
-		info = new GameInfo(currentInfo.getGameId(), currentInfo.getGameName(), currentInfo.getPlayersCount() + 1,
-				currentInfo.getStartDate(), new Date());
+		updateGameInfoAddPlayer();
 
 		if (!acceptsPlayers())
 			startPlaying();
@@ -244,6 +241,7 @@ public abstract class GameMaster extends ObservableGame {
 	 * @throws CardGameException - if some game rule is violated
 	 */
 	public final void playCard(String nick, Card card) throws CardGameException {
+		updateGameInfo();
 		if (!stage.equals(GameStage.PLAYING))
 			throw new CardGameException(info.getGameId() + " is not in playing stage");
 
@@ -295,6 +293,7 @@ public abstract class GameMaster extends ObservableGame {
 	 * @throws CardGameException - if some game rule is violated
 	 */
 	public synchronized final void playCards(String nick, List<Card> cards) throws CardGameException {
+		updateGameInfo();
 		if (!stage.equals(GameStage.PLAYING))
 			throw new CardGameException(info.getGameId() + " is not in playing stage");
 
@@ -591,4 +590,25 @@ public abstract class GameMaster extends ObservableGame {
 
 		return gameId;
 	}
+
+	/**
+	 * Simple method to update the GameInfo when a new player is added
+	 */
+	private void updateGameInfoAddPlayer() {
+		GameInfo currentInfo = info;
+
+		info = new GameInfo(currentInfo.getGameId(), currentInfo.getGameName(), currentInfo.getPlayersCount() + 1,
+				currentInfo.getStartDate(), new Date());
+	}
+
+	/**
+	 * Simple method to update the GameInfo with a new lastAccessDate
+	 */
+	private void updateGameInfo() {
+		GameInfo currentInfo = info;
+
+		info = new GameInfo(currentInfo.getGameId(), currentInfo.getGameName(), currentInfo.getPlayersCount(),
+				currentInfo.getStartDate(), new Date());
+	}
+
 }
