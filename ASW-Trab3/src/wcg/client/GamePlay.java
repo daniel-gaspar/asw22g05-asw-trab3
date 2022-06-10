@@ -174,7 +174,7 @@ public abstract class GamePlay extends SubPanel {
 					if (event instanceof SendCardsEvent) {
 						cardsOnHand.addAll(((SendCardsEvent) event).getCards());
 
-						systemMessages.setHTML("Cards have been given.");
+						systemMessages.setHTML(gameID + ": Cards have been given.");
 
 						redoSouthPanel();
 					}
@@ -184,7 +184,19 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundUpdateEvent) event).getRoundsCompleted();
 						mode = ((RoundUpdateEvent) event).getMode();
 
-						systemMessages.setHTML("It is now " + hasTurn + "'s turn.");
+						String messageToSet;
+						String gameSection = gameID + ": ";
+						String turnSection = "Cards have been played.";
+						
+						if(hasTurn != null)
+							if(username.equals(hasTurn))
+								turnSection = "It is now your turn";
+							else
+								turnSection = "It is now " + hasTurn + "'s turn.";
+						
+						messageToSet = gameSection + turnSection;
+						
+						systemMessages.setHTML(messageToSet);
 
 						redoCenterPanel();
 					}
@@ -192,10 +204,21 @@ public abstract class GamePlay extends SubPanel {
 						onTable = ((RoundConclusionEvent) event).getCardsOnTable();
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
-
-						systemMessages.setHTML(
-								"Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
-
+						
+						String messageToSet;
+						String roundsSection = gameID + ": Round #" + roundsCompleted + "is complete. ";
+						String turnSection = "";
+						
+						if(hasTurn != null)
+							if(username.equals(hasTurn))
+								turnSection = "It is now your turn.";
+							else
+								turnSection = "It is now " + hasTurn + "'s turn.";
+						
+						messageToSet = roundsSection + turnSection;
+						
+						systemMessages.setHTML(messageToSet);
+		
 						redoCenterPanel();
 					}
 					if (event instanceof GameEndEvent) {
@@ -207,7 +230,7 @@ public abstract class GamePlay extends SubPanel {
 						repeat = false;
 
 						systemMessages
-								.setHTML(winner + " has won " + gameID + " with " + points.get(winner) + " points.");
+								.setHTML(gameID + ": " + winner + " has won with " + points.get(winner) + " points.");
 
 						tabPanel.remove(gameID);
 
