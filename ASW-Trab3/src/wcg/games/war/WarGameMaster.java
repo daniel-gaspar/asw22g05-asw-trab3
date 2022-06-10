@@ -120,10 +120,12 @@ public class WarGameMaster extends GameMaster {
 				SendCardsEvent event = new SendCardsEvent(getGameId(), heap.asList());
 
 				if (cardComparison > 0) {
+					getHand(nickPlayerOne).addAllCards(heap.asList());
 					notify(nickPlayerOne, event);
 				}
 
 				if (cardComparison < 0) {
+					getHand(nickPlayerTwo).addAllCards(heap.asList());
 					notify(nickPlayerTwo, event);
 				}
 
@@ -152,10 +154,12 @@ public class WarGameMaster extends GameMaster {
 				SendCardsEvent event = new SendCardsEvent(getGameId(), heap.asList());
 
 				if (cardComparison > 0) {
+					getHand(nickPlayerOne).addAllCards(heap.asList());
 					notify(nickPlayerOne, event);
 				}
 
 				if (cardComparison < 0) {
+					getHand(nickPlayerTwo).addAllCards(heap.asList());
 					notify(nickPlayerTwo, event);
 				}
 
