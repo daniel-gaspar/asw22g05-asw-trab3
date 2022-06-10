@@ -20,8 +20,5 @@
   <welcome-file-list>
     <welcome-file>WebCardGame.html</welcome-file>
   </welcome-file-list>
-  
-  <!--  Stylesheet  -->
-  <stylesheet>WebCardGame.css</stylesheet>
 
 </web-app>
