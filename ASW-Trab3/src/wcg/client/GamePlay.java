@@ -51,7 +51,12 @@ public abstract class GamePlay extends SubPanel {
 	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 500;
 
-	private boolean repeat = true;
+	// To control whether the task in Scheduler should continue repeating or not
+	private boolean repeatScheduledTask = true;
+
+	// To be used only in WAR. Since there are no turns in this game, it is
+	// necessary to prevent playing multiple cards during the same turn.
+	protected boolean hasPlayedThisTurn = false;
 
 	/**
 	 * Creates the structure for a GamePlay tab, and uses the Scheduler to prompt
@@ -69,9 +74,9 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public boolean execute() {
-				if (repeat)
+				if (repeatScheduledTask)
 					processEvents();
-				return repeat;
+				return repeatScheduledTask;
 			}
 		}, TIMER_DELAY);
 
@@ -205,8 +210,10 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
 
+						hasPlayedThisTurn = false;
+
 						String messageToSet;
-						String roundsSection = gameID + ": Round #" + roundsCompleted + "is complete. ";
+						String roundsSection = gameID + ": Round #" + roundsCompleted + " is complete. ";
 						String turnSection = "";
 
 						if (hasTurn != null)
@@ -227,7 +234,7 @@ public abstract class GamePlay extends SubPanel {
 						winner = ((GameEndEvent) event).getWinner();
 						points = ((GameEndEvent) event).getPoints();
 
-						repeat = false;
+						repeatScheduledTask = false;
 
 						systemMessages
 								.setHTML(gameID + ": " + winner + " has won with " + points.get(winner) + " points.");
