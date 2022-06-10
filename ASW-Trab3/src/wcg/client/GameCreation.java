@@ -142,10 +142,8 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onSuccess(String gameID) {
-				tabPanel.add(new WaitingTab(gameID, FLAG_IS_OWNER).getWaitingTab(), "Play: " + gameID, gameID);
-				tabPanel.selectTab(gameID);
 
-				addToGame(gameID, gameName);
+				addToGame(gameID, gameName, FLAG_IS_OWNER);
 
 				if (!selectGameToAddBotsPanel.isAttached()) {
 
@@ -200,7 +198,7 @@ public class GameCreation extends SubPanel {
 	 * @param gameId - of game
 	 * @param name   - of game
 	 */
-	private void addToGame(String gameId, String name) {
+	private void addToGame(String gameId, String name, boolean isOwner) {
 
 		cardGameService.addPlayer(gameId, username, password, new AsyncCallback<Void>() {
 
@@ -212,6 +210,9 @@ public class GameCreation extends SubPanel {
 			@Override
 			public void onSuccess(Void result) {
 				systemMessages.setHTML(gameId + ": Game successfully joined.");
+				tabPanel.add(new WaitingTab(gameId, isOwner).getWaitingTab(), "Play: " + gameId,
+						gameId);
+				tabPanel.selectTab(gameId);
 				populateGameIDList();
 			}
 		});
@@ -278,10 +279,7 @@ public class GameCreation extends SubPanel {
 					for (GameInfo gameInfo : availableGameInfos) {
 						if (gameInfo.getGameId().equals(gameID)
 								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
-							addToGame(gameID, gameName);
-							tabPanel.add(new WaitingTab(gameID, !FLAG_IS_OWNER).getWaitingTab(), "Play: " + gameID,
-									gameID);
-							tabPanel.selectTab(gameID);
+							addToGame(gameID, gameName, !FLAG_IS_OWNER);
 						}
 					}
 				}
