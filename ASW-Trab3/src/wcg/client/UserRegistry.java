@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import wcg.shared.FieldVerifier;
+
 /**
  *
  * Extends MainPanel adding the Widget userRegistry
@@ -56,30 +58,38 @@ public class UserRegistry extends MainPanel {
 			public void onClick(ClickEvent event) {
 				String username = usernameBox.getText().toString();
 				String password = passwordBox.getText().toString();
-				System.out.println("username: " + username + " | pwd: " + password);
-				cardGameService.registerPlayer(username, password, new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						systemMessages.setHTML("Login not successful: " + caught.getMessage());
-					}
+				if (!FieldVerifier.isValidName(username))
+					systemMessages.setHTML("Invalid user, must have 3 or more characters");
+				else if (!FieldVerifier.isValidName(password))
+					systemMessages.setHTML("Invalid password, must have 3 or more characters");
+				else {
+					System.out.println("username: " + username + " | pwd: " + password);
+					cardGameService.registerPlayer(username, password, new AsyncCallback<Void>() {
 
-					@Override
-					public void onSuccess(Void result) {
-						systemMessages.setHTML("Login successful");
+						@Override
+						public void onFailure(Throwable caught) {
+							systemMessages.setHTML("Login not successful: " + caught.getMessage());
+						}
 
-						tabPanel.clear();
+						@Override
+						public void onSuccess(Void result) {
+							systemMessages.setHTML("Login successful");
 
-						// Adds a new tab with only the Username
-						tabPanel.add(new HTML("Username: " + username), "User");
+							tabPanel.clear();
 
-						// Adds a new "Select Game" tab
-						tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-								"Select Game", SELECT_GAME_TAB);
+							// Adds a new tab with only the Username
+							tabPanel.add(new HTML("Username: " + username), "User");
 
-						tabPanel.selectTab(1);
-					}
-				});
+							// Adds a new "Select Game" tab
+							tabPanel.add(
+									new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+									"Select Game", SELECT_GAME_TAB);
+
+							tabPanel.selectTab(1);
+						}
+					});
+				}
 			}
 		});
 		registerButton.ensureDebugId("cwBasicButton-normal");

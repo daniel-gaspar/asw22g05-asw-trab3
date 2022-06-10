@@ -20,6 +20,8 @@ public class WebCardGame implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+//		rootPanel.setHeight("600px");
+//		rootPanel.setWidth("600px");
 		// Create a tab panel with two tabs, each of which displays a different
 		// piece of text.
 		tabPanel.add(new UserRegistry(tabPanel, cardGameService, systemMessages).getUserRegistry(),
