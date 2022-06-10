@@ -30,7 +30,8 @@ public class GamePlayHEARTS extends GamePlay {
 	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
 
 	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
-	public static final DockLayoutConstant[] order = {DockPanel.SOUTH,DockPanel.EAST,DockPanel.NORTH,DockPanel.WEST};
+	private final Map<DockLayoutConstant, Widget> cardsPlacement = new HashMap<>();
+	private static final DockLayoutConstant[] order = {DockPanel.SOUTH,DockPanel.NORTH,DockPanel.EAST,DockPanel.WEST};
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
@@ -99,14 +100,13 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
-		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
+		HorizontalPanel centerPanel = new HorizontalPanel();
+		centerPanel.setPixelSize(83,  120);
+		cardsOnTablePanel.add(centerPanel, DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
 		
-		VerticalPanel playerContainer = new VerticalPanel();
-		
-		
-		int i = 0;
+		cardsPlacement.clear();
 
 		for (String key : getOnTable().keySet()) {
 			if (!playerPosition.containsKey(key)) {
@@ -114,19 +114,20 @@ public class GamePlayHEARTS extends GamePlay {
 			}
 
 			Card card = getOnTable().get(key).get(0);
+			VerticalPanel playerContainer = new VerticalPanel();
 			playerContainer.add(Cards.createCard(card));
 			playerContainer.add(new HTML("Player: " + key));
-			cardsOnTablePanel.add(playerContainer, playerPosition.get(key));
-			i++;
+			
+			cardsPlacement.put(playerPosition.get(key), playerContainer);
 		}
 		
-		
-		
-		while(i<4) {
-			//VerticalPanel playerContainer = new VerticalPanel();
-			playerContainer.add(Cards.createCard("facedown"));
-			cardsOnTablePanel.add(playerContainer, order[i]);
-			i++;
+		for(DockLayoutConstant position: order) {
+			if(!cardsPlacement.containsKey(position)) {
+				VerticalPanel playerContainer = new VerticalPanel();
+				playerContainer.add(Cards.createCard("facedown"));
+				cardsPlacement.put(position, playerContainer);
+			}
+			cardsOnTablePanel.add(cardsPlacement.get(position), position);
 		}
 
 		return cardsOnTablePanel;
