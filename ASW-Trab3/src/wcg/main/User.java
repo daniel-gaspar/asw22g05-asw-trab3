@@ -5,7 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import wcg.games.Player;
 import wcg.shared.events.GameEndEvent;
@@ -24,7 +26,7 @@ public class User implements Serializable, Player {
 
 	private String nick;
 	private byte[] password;
-	private List<GameEvent> listOfEvents = new ArrayList<>();
+	private Map<String, List<GameEvent>> mapOfEvents = new HashMap<>();
 
 	/**
 	 * Instantiates a user with given nick and password.
@@ -78,22 +80,46 @@ public class User implements Serializable, Player {
 
 	@Override
 	public void notify(SendCardsEvent event) {
-		listOfEvents.add(event);
+		String gameID = event.getGameID();
+		if (!mapOfEvents.containsKey(gameID)) {
+			List<GameEvent> listOfEvents = new ArrayList<>();
+			mapOfEvents.put(gameID, listOfEvents);
+		}
+
+		mapOfEvents.get(gameID).add(event);
 	}
 
 	@Override
 	public void notify(RoundUpdateEvent event) {
-		listOfEvents.add(event);
+		String gameID = event.getGameID();
+		if (!mapOfEvents.containsKey(gameID)) {
+			List<GameEvent> listOfEvents = new ArrayList<>();
+			mapOfEvents.put(gameID, listOfEvents);
+		}
+
+		mapOfEvents.get(gameID).add(event);
 	}
 
 	@Override
 	public void notify(RoundConclusionEvent event) {
-		listOfEvents.add(event);
+		String gameID = event.getGameID();
+		if (!mapOfEvents.containsKey(gameID)) {
+			List<GameEvent> listOfEvents = new ArrayList<>();
+			mapOfEvents.put(gameID, listOfEvents);
+		}
+
+		mapOfEvents.get(gameID).add(event);
 	}
 
 	@Override
 	public void notify(GameEndEvent event) {
-		listOfEvents.add(event);
+		String gameID = event.getGameID();
+		if (!mapOfEvents.containsKey(gameID)) {
+			List<GameEvent> listOfEvents = new ArrayList<>();
+			mapOfEvents.put(gameID, listOfEvents);
+		}
+
+		mapOfEvents.get(gameID).add(event);
 	}
 
 	/**
@@ -102,11 +128,14 @@ public class User implements Serializable, Player {
 	 * 
 	 * @return list of events
 	 */
-	List<GameEvent> getRecentEvents() {
+	List<GameEvent> getRecentEvents(String gameID) {
+
 		List<GameEvent> eventsToReturn = new ArrayList<>();
-		for (GameEvent event : listOfEvents)
-			eventsToReturn.add(event);
-		listOfEvents.clear();
+		if (mapOfEvents.containsKey(gameID)) {
+			eventsToReturn.addAll(mapOfEvents.get(gameID));
+			mapOfEvents.remove(gameID);
+		}
+
 		return eventsToReturn;
 	}
 }

@@ -49,39 +49,47 @@ public class GamePlayWAR extends GamePlay {
 			card.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					List<Card> cardsToPlay = new ArrayList<>();
+					if (!hasPlayedThisTurn) {
+						List<Card> cardsToPlay = new ArrayList<>();
 
-					if ("War".equals(getMode())) {
-						for (int i = 0; i < 3; i++)
-							cardsToPlay.add(getCardsOnHand().get(i));
+						if ("War".equals(getMode())) {
+							for (int i = 0; i < 3; i++)
+								cardsToPlay.add(getCardsOnHand().get(i));
+						} else {
+							cardsToPlay.add(getCardsOnHand().get(0));
+						}
+
+						Logger logger = Logger.getLogger("nameOfLogger");
+
+						logger.log(Level.SEVERE, cardsToPlay.toString());
+						logger.log(Level.SEVERE, getCardsOnHand().toString());
+
+						cardGameService.playCards(getGameId(), username, password, cardsToPlay,
+								new AsyncCallback<Void>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										systemMessages.setHTML(
+												getGameId() + ": Failed to play cards. " + caught.getMessage());
+									}
+
+									@Override
+									public void onSuccess(Void result) {
+										getCardsOnHand().removeAll(cardsToPlay);
+										if ("War".equals(getMode())) {
+											for (int i = 0; i < 3; i++) {
+												cardsOnHandPanel.remove(cardsOnHandPanel.getWidgetCount() - 1);
+											}
+										} else {
+											cardsOnHandPanel.remove(cardsOnHandPanel.getWidgetCount() - 1);
+										}
+										cardsOnHandPanel.showWidget(cardsOnHandPanel.getWidgetCount() - 1);
+
+										hasPlayedThisTurn = true;
+									}
+								});
 					} else {
-						cardsToPlay.add(getCardsOnHand().get(0));
+						systemMessages.setHTML(getGameId() + ": You have already played this turn.");
 					}
-
-					Logger logger = Logger.getLogger("nameOfLogger");
-
-					logger.log(Level.SEVERE, cardsToPlay.toString());
-					logger.log(Level.SEVERE, getCardsOnHand().toString());
-
-					cardGameService.playCards(getGameId(), username, password, cardsToPlay, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							systemMessages.setHTML(caught.getMessage());
-						}
-
-						@Override
-						public void onSuccess(Void result) {
-							getCardsOnHand().removeAll(cardsToPlay);
-							if ("War".equals(getMode())) {
-								for (int i = 0; i < 3; i++) {
-									cardsOnHandPanel.remove(cardsOnHandPanel.getWidgetCount() - 1);
-								}
-							} else {
-								cardsOnHandPanel.remove(cardsOnHandPanel.getWidgetCount() - 1);
-							}
-							cardsOnHandPanel.showWidget(cardsOnHandPanel.getWidgetCount() - 1);
-						}
-					});
 				}
 			});
 

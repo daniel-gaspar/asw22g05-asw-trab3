@@ -51,7 +51,12 @@ public abstract class GamePlay extends SubPanel {
 	// To schedule the processEvents routine
 	private static final int TIMER_DELAY = 500;
 
-	private boolean repeat = true;
+	// To control whether the task in Scheduler should continue repeating or not
+	private boolean repeatScheduledTask = true;
+
+	// To be used only in WAR. Since there are no turns in this game, it is
+	// necessary to prevent playing multiple cards during the same turn.
+	protected boolean hasPlayedThisTurn = false;
 
 	/**
 	 * Creates the structure for a GamePlay tab, and uses the Scheduler to prompt
@@ -69,9 +74,9 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public boolean execute() {
-				if (repeat)
+				if (repeatScheduledTask)
 					processEvents();
-				return repeat;
+				return repeatScheduledTask;
 			}
 		}, TIMER_DELAY);
 
@@ -161,11 +166,11 @@ public abstract class GamePlay extends SubPanel {
 	 * Requests a list of Recent Events from the server, and processes them
 	 */
 	private void processEvents() {
-		cardGameService.getRecentEvents(username, password, new AsyncCallback<List<GameEvent>>() {
+		cardGameService.getRecentEvents(gameID, username, password, new AsyncCallback<List<GameEvent>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameID + ": Failed to get recent events. " + caught.getMessage());
 			}
 
 			@Override
@@ -174,7 +179,7 @@ public abstract class GamePlay extends SubPanel {
 					if (event instanceof SendCardsEvent) {
 						cardsOnHand.addAll(((SendCardsEvent) event).getCards());
 
-						systemMessages.setHTML("Cards have been given.");
+						systemMessages.setHTML(gameID + ": Cards have been given.");
 
 						redoSouthPanel();
 					}
@@ -184,7 +189,19 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundUpdateEvent) event).getRoundsCompleted();
 						mode = ((RoundUpdateEvent) event).getMode();
 
-						systemMessages.setHTML("It is now " + hasTurn + "'s turn.");
+						String messageToSet;
+						String gameSection = gameID + ": ";
+						String turnSection = "Cards have been played.";
+
+						if (hasTurn != null)
+							if (username.equals(hasTurn))
+								turnSection = "It is now your turn";
+							else
+								turnSection = "It is now " + hasTurn + "'s turn.";
+
+						messageToSet = gameSection + turnSection;
+
+						systemMessages.setHTML(messageToSet);
 
 						redoCenterPanel();
 					}
@@ -193,8 +210,21 @@ public abstract class GamePlay extends SubPanel {
 						roundsCompleted = ((RoundConclusionEvent) event).getRoundsCompleted();
 						points = ((RoundConclusionEvent) event).getPoints();
 
-						systemMessages.setHTML(
-								"Round #" + roundsCompleted + " is complete. It is now " + hasTurn + "'s turn.");
+						hasPlayedThisTurn = false;
+
+						String messageToSet;
+						String roundsSection = gameID + ": Round #" + roundsCompleted + " is complete. ";
+						String turnSection = "";
+
+						if (hasTurn != null)
+							if (username.equals(hasTurn))
+								turnSection = "It is now your turn.";
+							else
+								turnSection = "It is now " + hasTurn + "'s turn.";
+
+						messageToSet = roundsSection + turnSection;
+
+						systemMessages.setHTML(messageToSet);
 
 						redoCenterPanel();
 					}
@@ -204,10 +234,10 @@ public abstract class GamePlay extends SubPanel {
 						winner = ((GameEndEvent) event).getWinner();
 						points = ((GameEndEvent) event).getPoints();
 
-						repeat = false;
+						repeatScheduledTask = false;
 
 						systemMessages
-								.setHTML(winner + " has won " + gameID + " with " + points.get(winner) + " points.");
+								.setHTML(gameID + ": " + winner + " has won with " + points.get(winner) + " points.");
 
 						tabPanel.remove(gameID);
 

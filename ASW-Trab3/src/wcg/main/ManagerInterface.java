@@ -89,6 +89,6 @@ public interface ManagerInterface {
 	 * @return list of events
 	 * @throws CardGameException - if authentication fails
 	 */
-	List<GameEvent> getRecentEvents(String nick, String password) throws CardGameException;
+	List<GameEvent> getRecentEvents(String gameID, String nick, String password) throws CardGameException;
 
 }

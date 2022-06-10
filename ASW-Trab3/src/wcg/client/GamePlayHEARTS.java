@@ -58,7 +58,8 @@ public class GamePlayHEARTS extends GamePlay {
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									systemMessages.setHTML(caught.getMessage());
+									systemMessages
+											.setHTML(getGameId() + ": Failed to play card. " + caught.getMessage());
 									logger.log(Level.SEVERE, getGameId());
 									logger.log(Level.SEVERE, username);
 									logger.log(Level.SEVERE, password);

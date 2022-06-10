@@ -61,8 +61,8 @@ public class CardGameServiceImpl extends RemoteServiceServlet implements CardGam
 	}
 
 	@Override
-	public List<GameEvent> getRecentEvents(String nick, String password) throws CardGameException {
-		return manager.getRecentEvents(nick, password);
+	public List<GameEvent> getRecentEvents(String gameID, String nick, String password) throws CardGameException {
+		return manager.getRecentEvents(gameID, nick, password);
 	}
 
 }

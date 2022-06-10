@@ -59,7 +59,8 @@ public class WaitingTab extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameID + ": Failed to verify available game infos while waiting to start. "
+						+ caught.getMessage());
 			}
 
 			@Override
@@ -91,7 +92,9 @@ public class WaitingTab extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages
+						.setHTML(gameID + ": Failed to get available game infos while checking whether to add bots. "
+								+ caught.getMessage());
 			}
 
 			@Override
@@ -126,12 +129,12 @@ public class WaitingTab extends SubPanel {
 		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameID + ": Adding bots, failed to add bot. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				systemMessages.setHTML("Bot added");
+				systemMessages.setHTML(gameID + ": Bot added.");
 			}
 		});
 	}
