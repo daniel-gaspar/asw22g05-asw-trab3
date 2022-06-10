@@ -170,7 +170,7 @@ public abstract class GamePlay extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameID + ": Failed to get recent events. " + caught.getMessage());
 			}
 
 			@Override

@@ -206,12 +206,12 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameId + ": Failed adding to game. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				systemMessages.setHTML("Game successfully joined " + gameId + ". You can now Start the Game");
+				systemMessages.setHTML(gameId + ": Game successfully joined.");
 				populateGameIDList();
 			}
 		});
@@ -230,7 +230,7 @@ public class GameCreation extends SubPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML("Fetching available game infos failure: " + caught.getMessage());
 			}
 
 			@Override
@@ -269,7 +269,8 @@ public class GameCreation extends SubPanel {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					systemMessages.setHTML(caught.getMessage());
+					systemMessages.setHTML(
+							gameID + ": Joining game. Failed to get available game infos. " + caught.getMessage());
 				}
 
 				@Override
@@ -298,7 +299,8 @@ public class GameCreation extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages
+						.setHTML(gameID + ": Adding bots, failed to get available game infos. " + caught.getMessage());
 			}
 
 			@Override
@@ -328,12 +330,12 @@ public class GameCreation extends SubPanel {
 		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(caught.getMessage());
+				systemMessages.setHTML(gameID + ": Adding bots, failed to add bot. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				systemMessages.setHTML("Bot added");
+				systemMessages.setHTML(gameID + ": Bot added.");
 			}
 		});
 	}

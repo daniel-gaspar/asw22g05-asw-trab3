@@ -68,7 +68,8 @@ public class GamePlayWAR extends GamePlay {
 								new AsyncCallback<Void>() {
 									@Override
 									public void onFailure(Throwable caught) {
-										systemMessages.setHTML(caught.getMessage());
+										systemMessages.setHTML(
+												getGameId() + ": Failed to play cards. " + caught.getMessage());
 									}
 
 									@Override
