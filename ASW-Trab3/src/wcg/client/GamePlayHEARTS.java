@@ -1,6 +1,5 @@
 package wcg.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
@@ -125,6 +124,16 @@ public class GamePlayHEARTS extends GamePlay {
 			if(!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
 				playerContainer.add(Cards.createCard("facedown"));
+				
+				HTML playerName = new HTML("Player: Opponent");
+				
+				for(String player: playerPosition.keySet()) {
+					if(position.equals(playerPosition.get(player)))
+						playerName = new HTML("Player: " + player);
+				}
+				
+				playerContainer.add(playerName);
+				
 				cardsPlacement.put(position, playerContainer);
 			}
 			cardsOnTablePanel.add(cardsPlacement.get(position), position);
