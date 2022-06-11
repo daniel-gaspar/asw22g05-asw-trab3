@@ -68,6 +68,7 @@ public abstract class GamePlay extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
+		gamePlay.setStyleName("gwt-GameArea");
 		processEvents();
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
