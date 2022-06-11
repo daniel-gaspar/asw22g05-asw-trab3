@@ -2,13 +2,16 @@ package wcg.client;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.HashMap;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.HTML;
@@ -22,21 +25,24 @@ import wcg.shared.cards.Card;
 
 public class GamePlayHEARTS extends GamePlay {
 
+	private static final int CARDS_ON_HAND_PANEL_WIDTH = 900;
+	private static final int CARD_POSITION_OFFSET = 60;
 	/**
 	 * The Widgets which will belong in centerPanel and southPanel of GamePlay,
 	 * respectively
 	 */
 	private final DockPanel cardsOnTablePanel = new DockPanel();
-	private final HorizontalPanel cardsOnHandPanel = new HorizontalPanel();
+	private final AbsolutePanel cardsOnHandPanel = new AbsolutePanel();
 
 	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
 	private final Map<DockLayoutConstant, Widget> cardsPlacement = new HashMap<>();
-	private static final DockLayoutConstant[] order = { DockPanel.SOUTH, DockPanel.NORTH, DockPanel.EAST,
+	private static final DockLayoutConstant[] POSITION_ORDER = { DockPanel.SOUTH, DockPanel.NORTH, DockPanel.EAST,
 			DockPanel.WEST };
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
-		gamePlay.setWidth("1100px");
+		cardsOnHandPanel.setWidth("900px");
+		cardsOnHandPanel.setHeight("120px");
 	}
 
 	/**
@@ -47,15 +53,16 @@ public class GamePlayHEARTS extends GamePlay {
 	@Override
 	protected Widget drawCardsOnHand() {
 		cardsOnHandPanel.clear();
+
+		int startingLeftPosition = getInitialLeftPosition();
+
+		int i = 0;
 		for (Card c : getCardsOnHand()) {
 			Image card = Cards.createCard(c);
+			card.getElement().getStyle().setZIndex(1);
 			card.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Logger logger = Logger.getLogger("nameOfLogger");
-
-					logger.log(Level.SEVERE, c.toString());
-					logger.log(Level.SEVERE, getCardsOnHand().toString());
 
 					cardGameService.playCards(getGameId(), username, password, Arrays.asList(c),
 							new AsyncCallback<Void>() {
@@ -63,24 +70,34 @@ public class GamePlayHEARTS extends GamePlay {
 								public void onFailure(Throwable caught) {
 									systemMessages
 											.setHTML(getGameId() + ": Failed to play card. " + caught.getMessage());
-									logger.log(Level.SEVERE, getGameId());
-									logger.log(Level.SEVERE, username);
-									logger.log(Level.SEVERE, password);
-									logger.log(Level.SEVERE, c.toString());
-									logger.log(Level.SEVERE, "Not managing to play");
 								}
 
 								@Override
 								public void onSuccess(Void result) {
-									logger.log(Level.SEVERE, "Successful play");
 									getCardsOnHand().remove(c);
-									card.removeFromParent();
+									drawCardsOnHand();
 								}
 							});
 				}
 			});
 
-			cardsOnHandPanel.add(card);
+			card.addMouseOverHandler(new MouseOverHandler() {
+				@Override
+				public void onMouseOver(MouseOverEvent event) {
+					card.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
+				}
+			});
+
+			card.addMouseOutHandler(new MouseOutHandler() {
+				@Override
+				public void onMouseOut(MouseOutEvent event) {
+					card.getElement().getStyle().setZIndex(1);
+				}
+			});
+
+			cardsOnHandPanel.add(card, startingLeftPosition + i * CARD_POSITION_OFFSET, 0);
+
+			i++;
 		}
 		return cardsOnHandPanel;
 	}
@@ -124,7 +141,7 @@ public class GamePlayHEARTS extends GamePlay {
 			cardsPlacement.put(playerPosition.get(key), playerContainer);
 		}
 
-		for (DockLayoutConstant position : order) {
+		for (DockLayoutConstant position : POSITION_ORDER) {
 			if (!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
 				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -163,5 +180,19 @@ public class GamePlayHEARTS extends GamePlay {
 			return DockPanel.EAST;
 		}
 		return null;
+	}
+
+	/**
+	 * Auxiliary method to calculate the position where the group of cards on Hand
+	 * should start
+	 * 
+	 * @return position in pixels
+	 */
+	private int getInitialLeftPosition() {
+		int panelWidth = CARDS_ON_HAND_PANEL_WIDTH;
+		int numberOfCards = getCardsOnHand().size();
+		int spaceForCards = CARD_POSITION_OFFSET * numberOfCards;
+
+		return (panelWidth - spaceForCards) / 2;
 	}
 }

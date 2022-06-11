@@ -37,7 +37,7 @@ public class GamePlayWAR extends GamePlay {
 
 	public GamePlayWAR(String gameId) {
 		super(gameId);
-		gamePlay.setWidth("300px");
+		cardsOnTablePanel.setWidth("300px");
 	}
 
 	/**

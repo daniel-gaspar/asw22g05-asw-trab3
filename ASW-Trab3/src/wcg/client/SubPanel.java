@@ -19,7 +19,7 @@ public abstract class SubPanel extends MainPanel {
 		SubPanel.username = username;
 		SubPanel.password = password;
 	}
-	
+
 	/**
 	 * Prompts the server to add a bot to a Game with gameId
 	 * 

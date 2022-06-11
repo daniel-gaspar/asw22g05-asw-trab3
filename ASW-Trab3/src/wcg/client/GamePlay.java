@@ -90,7 +90,7 @@ public abstract class GamePlay extends SubPanel {
 	 */
 	private Widget onGamePlayInitialize() {
 		gamePlayPanel.setStyleName("cw-DockPanel");
-		gamePlayPanel.setSpacing(0);
+		gamePlayPanel.setSpacing(2);
 		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
 		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
