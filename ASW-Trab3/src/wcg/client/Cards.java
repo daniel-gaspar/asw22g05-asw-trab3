@@ -20,6 +20,9 @@ public class Cards {
 	private static final String SEPARATOR_JOKER = "_joker";
 	private static final String IMAGE_LOCATION = "images/";
 
+	private static final int CARD_WIDTH = 83;
+	private static final int CARD_HEIGHT = 120;
+
 	Cards() {
 	}
 
@@ -39,7 +42,7 @@ public class Cards {
 		}
 
 		Image image = new Image(IMAGE_LOCATION + cardFile);
-		image.setPixelSize(83, 120);
+		image.setPixelSize(CARD_WIDTH, CARD_HEIGHT);
 
 		return image;
 	}
@@ -47,7 +50,7 @@ public class Cards {
 	protected static Image createCard(String name) {
 
 		Image image = new Image(IMAGE_LOCATION + name + FILE_EXTENSION);
-		image.setPixelSize(83, 120);
+		image.setPixelSize(CARD_WIDTH, CARD_HEIGHT);
 
 		return image;
 	}
