@@ -20,7 +20,6 @@ public class WebCardGame implements EntryPoint {
 	private final HTML systemMessagesStatic = new HTML("System Messages: ");
 	private final HTML systemMessages = new HTML("");
 
-
 	@Override
 	public void onModuleLoad() {
 		// Create a tab panel with two tabs, each of which displays a different
@@ -36,7 +35,7 @@ public class WebCardGame implements EntryPoint {
 		systemMessagesPanel.setSpacing(5);
 		systemMessagesPanel.add(systemMessagesStatic);
 		systemMessagesPanel.add(systemMessages);
-		
+
 		// Add the elements to the root panel
 		rootPanel.add(systemMessagesPanel);
 		rootPanel.add(tabPanel);

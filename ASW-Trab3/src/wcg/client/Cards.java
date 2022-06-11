@@ -34,8 +34,7 @@ public class Cards {
 
 		if (card.getValue() == null) {
 			cardFile = getJokerColorText(card.getSuit()) + SEPARATOR_JOKER + FILE_EXTENSION;
-		}
-		else {
+		} else {
 			cardFile = getValueText(card.getValue()) + SEPARATOR + getSuitText(card.getSuit()) + FILE_EXTENSION;
 		}
 
@@ -44,12 +43,12 @@ public class Cards {
 
 		return image;
 	}
-	
+
 	protected static Image createCard(String name) {
-		
+
 		Image image = new Image(IMAGE_LOCATION + name + FILE_EXTENSION);
 		image.setPixelSize(83, 120);
-		
+
 		return image;
 	}
 

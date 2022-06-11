@@ -31,7 +31,8 @@ public class GamePlayHEARTS extends GamePlay {
 
 	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
 	private final Map<DockLayoutConstant, Widget> cardsPlacement = new HashMap<>();
-	private static final DockLayoutConstant[] order = {DockPanel.SOUTH,DockPanel.NORTH,DockPanel.EAST,DockPanel.WEST};
+	private static final DockLayoutConstant[] order = { DockPanel.SOUTH, DockPanel.NORTH, DockPanel.EAST,
+			DockPanel.WEST };
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
@@ -101,11 +102,11 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		HorizontalPanel centerPanel = new HorizontalPanel();
-		centerPanel.setPixelSize(83,  120);
+		centerPanel.setPixelSize(83, 120);
 		cardsOnTablePanel.add(centerPanel, DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
-		
+
 		cardsPlacement.clear();
 
 		for (String key : getOnTable().keySet()) {
@@ -118,25 +119,25 @@ public class GamePlayHEARTS extends GamePlay {
 			playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 			playerContainer.add(Cards.createCard(card));
 			playerContainer.add(new HTML("Player: " + key));
-			
+
 			cardsPlacement.put(playerPosition.get(key), playerContainer);
 		}
-		
-		for(DockLayoutConstant position: order) {
-			if(!cardsPlacement.containsKey(position)) {
+
+		for (DockLayoutConstant position : order) {
+			if (!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
 				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 				playerContainer.add(Cards.createCard("facedown"));
-				
+
 				HTML playerName = new HTML("Player: Opponent");
-				
-				for(String player: playerPosition.keySet()) {
-					if(position.equals(playerPosition.get(player)))
+
+				for (String player : playerPosition.keySet()) {
+					if (position.equals(playerPosition.get(player)))
 						playerName = new HTML("Player: " + player);
 				}
-				
+
 				playerContainer.add(playerName);
-				
+
 				cardsPlacement.put(position, playerContainer);
 			}
 			cardsOnTablePanel.add(cardsPlacement.get(position), position);

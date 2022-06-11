@@ -30,5 +30,5 @@ public interface CardGameService extends RemoteService {
 
 	public void playCards(String gameId, String nick, String password, List<Card> cards) throws CardGameException;
 
-	public List<GameEvent> getRecentEvents(String gameID, String nick, String password) throws CardGameException;
+	public List<GameEvent> getRecentEvents(String gameId, String nick, String password) throws CardGameException;
 }

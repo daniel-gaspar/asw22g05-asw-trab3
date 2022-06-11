@@ -40,14 +40,14 @@ public class GameCreation extends SubPanel {
 	private final HorizontalPanel selectGamePanel = new HorizontalPanel();
 	private final VerticalPanel selectGameModePanel = new VerticalPanel();
 	private final ListBox gameList = new ListBox();
-	private final VerticalPanel selectGameIDPanel = new VerticalPanel();
+	private final VerticalPanel selectGameIdPanel = new VerticalPanel();
 	private final HTML gameModeListLabel = new HTML("List of Games:");
-	private final ListBox gameIDList = new ListBox();
+	private final ListBox gameIdList = new ListBox();
 	private final HTML avlbGamesLabel = new HTML("Available Games:");
 	private final Button btnJoinGame = new Button("Join Game");
 	private final VerticalPanel selectGameToAddBotsPanel = new VerticalPanel();
 	private final HTML ownedGamesLabel = new HTML("Owned Games:");
-	private final ListBox ownedGameIDList = new ListBox();
+	private final ListBox ownedGameIdList = new ListBox();
 	private final Button btnAddBots = new Button("Add Bots to Game");
 
 	public GameCreation(TabPanel tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
@@ -95,21 +95,21 @@ public class GameCreation extends SubPanel {
 		selectGamePanel.add(selectGameModePanel);
 
 		// Panel for list of existing games
-		selectGameIDPanel.setSpacing(10);
+		selectGameIdPanel.setSpacing(10);
 
-		gameIDList.ensureDebugId("cwListBox-multiBox");
-		gameIDList.setWidth("11em");
-		gameIDList.setMultipleSelect(false);
-		gameIDList.setVisibleItemCount(10);
+		gameIdList.ensureDebugId("cwListBox-multiBox");
+		gameIdList.setWidth("11em");
+		gameIdList.setMultipleSelect(false);
+		gameIdList.setVisibleItemCount(10);
 
 		gameList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				populateGameIDList();
+				populateGameIdList();
 			}
 		});
 
-		populateGameIDList();
+		populateGameIdList();
 
 		// Joins registered player to selected game
 		btnJoinGame.addClickHandler(new ClickHandler() {
@@ -119,10 +119,10 @@ public class GameCreation extends SubPanel {
 			}
 		});
 
-		selectGameIDPanel.add(avlbGamesLabel);
-		selectGameIDPanel.add(gameIDList);
-		selectGameIDPanel.add(btnJoinGame);
-		selectGamePanel.add(selectGameIDPanel);
+		selectGameIdPanel.add(avlbGamesLabel);
+		selectGameIdPanel.add(gameIdList);
+		selectGameIdPanel.add(btnJoinGame);
+		selectGamePanel.add(selectGameIdPanel);
 
 		selectGameModeWidget = selectGamePanel;
 	}
@@ -141,21 +141,21 @@ public class GameCreation extends SubPanel {
 			}
 
 			@Override
-			public void onSuccess(String gameID) {
+			public void onSuccess(String gameId) {
 
-				addToGame(gameID, gameName, FLAG_IS_OWNER);
+				addToGame(gameId, gameName, FLAG_IS_OWNER);
 
 				if (!selectGameToAddBotsPanel.isAttached()) {
 
 					selectGameToAddBotsPanel.clear();
-					ownedGameIDList.clear();
+					ownedGameIdList.clear();
 
 					selectGameToAddBotsPanel.setSpacing(10);
 
-					ownedGameIDList.ensureDebugId("cwListBox-multiBox");
-					ownedGameIDList.setWidth("11em");
-					ownedGameIDList.setMultipleSelect(false);
-					ownedGameIDList.setVisibleItemCount(10);
+					ownedGameIdList.ensureDebugId("cwListBox-multiBox");
+					ownedGameIdList.setWidth("11em");
+					ownedGameIdList.setMultipleSelect(false);
+					ownedGameIdList.setVisibleItemCount(10);
 
 					btnAddBots.addClickHandler(new ClickHandler() {
 						@Override
@@ -165,15 +165,15 @@ public class GameCreation extends SubPanel {
 					});
 
 					selectGameToAddBotsPanel.add(ownedGamesLabel);
-					selectGameToAddBotsPanel.add(ownedGameIDList);
+					selectGameToAddBotsPanel.add(ownedGameIdList);
 					selectGameToAddBotsPanel.add(btnAddBots);
 
 					selectGamePanel.add(selectGameToAddBotsPanel);
 				}
 
-				String itemForList = gameID + " - 1/" + AuxMethods.numberOfPlayers(gameName);
-				ownedGameIDList.addItem(itemForList, gameID);
-				ownedGameIDList.setSelectedIndex(0);
+				String itemForList = gameId + " - 1/" + AuxMethods.numberOfPlayers(gameName);
+				ownedGameIdList.addItem(itemForList, gameId);
+				ownedGameIdList.setSelectedIndex(0);
 			}
 		});
 	}
@@ -210,22 +210,21 @@ public class GameCreation extends SubPanel {
 			@Override
 			public void onSuccess(Void result) {
 				systemMessages.setHTML(gameId + ": Game successfully joined.");
-				tabPanel.add(new WaitingTab(gameId, isOwner).getWaitingTab(), "Play: " + gameId,
-						gameId);
+				tabPanel.add(new WaitingTab(gameId, isOwner).getWaitingTab(), "Play: " + gameId, gameId);
 				tabPanel.selectTab(gameId);
-				populateGameIDList();
+				populateGameIdList();
 			}
 		});
 	}
 
 	/**
 	 * Prompts the server for a List of Available Game Infos, and populates the
-	 * GameIDList, depending on the currently selected game
+	 * gameIdList, depending on the currently selected game
 	 */
-	private void populateGameIDList() {
+	private void populateGameIdList() {
 		String name = gameList.getSelectedItemText();
 
-		gameIDList.clear();
+		gameIdList.clear();
 
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 
@@ -240,15 +239,15 @@ public class GameCreation extends SubPanel {
 					if (gameInfo.getGameName().equals(name)) {
 						String itemForList = gameInfo.getGameId() + " - " + gameInfo.getPlayersCount() + "/"
 								+ AuxMethods.numberOfPlayers(name);
-						gameIDList.addItem(itemForList, gameInfo.getGameId());
+						gameIdList.addItem(itemForList, gameInfo.getGameId());
 					}
 				}
 			}
 		});
 
-		gameIDList.addItem(NEW_GAME_STRING, NEW_GAME_STRING);
+		gameIdList.addItem(NEW_GAME_STRING, NEW_GAME_STRING);
 
-		gameIDList.setSelectedIndex(0);
+		gameIdList.setSelectedIndex(0);
 	}
 
 	/**
@@ -260,10 +259,10 @@ public class GameCreation extends SubPanel {
 	 * </ul>
 	 */
 	private void joinGame() {
-		String gameID = gameIDList.getSelectedValue();
+		String gameId = gameIdList.getSelectedValue();
 		String gameName = gameList.getSelectedItemText();
 
-		if (gameID.equals(NEW_GAME_STRING)) {
+		if (gameId.equals(NEW_GAME_STRING)) {
 			createGame(gameName);
 		} else {
 			cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
@@ -271,15 +270,15 @@ public class GameCreation extends SubPanel {
 				@Override
 				public void onFailure(Throwable caught) {
 					systemMessages.setHTML(
-							gameID + ": Joining game. Failed to get available game infos. " + caught.getMessage());
+							gameId + ": Joining game. Failed to get available game infos. " + caught.getMessage());
 				}
 
 				@Override
 				public void onSuccess(List<GameInfo> availableGameInfos) {
 					for (GameInfo gameInfo : availableGameInfos) {
-						if (gameInfo.getGameId().equals(gameID)
+						if (gameInfo.getGameId().equals(gameId)
 								&& isJoinable(gameInfo.getGameName(), gameInfo.getPlayersCount())) {
-							addToGame(gameID, gameName, !FLAG_IS_OWNER);
+							addToGame(gameId, gameName, !FLAG_IS_OWNER);
 						}
 					}
 				}
@@ -292,48 +291,48 @@ public class GameCreation extends SubPanel {
 	 * game doesn't currently have enough players to start, adds bots until it does
 	 */
 	private void forceStartGame() {
-		String gameID = ownedGameIDList.getSelectedValue();
+		String gameId = ownedGameIdList.getSelectedValue();
 
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				systemMessages
-						.setHTML(gameID + ": Adding bots, failed to get available game infos. " + caught.getMessage());
+						.setHTML(gameId + ": Adding bots, failed to get available game infos. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(List<GameInfo> availableGameInfos) {
 				for (GameInfo gameInfo : availableGameInfos) {
-					if (gameInfo.getGameId().equals(gameID)) {
+					if (gameInfo.getGameId().equals(gameId)) {
 						for (int i = gameInfo.getPlayersCount(); i < AuxMethods
 								.numberOfPlayers(gameInfo.getGameName()); i++) {
-							addBot(gameID);
+							addBot(gameId);
 						}
 					}
 				}
 
-				ownedGameIDList.removeItem(ownedGameIDList.getSelectedIndex());
-				if (ownedGameIDList.getItemCount() == 0)
+				ownedGameIdList.removeItem(ownedGameIdList.getSelectedIndex());
+				if (ownedGameIdList.getItemCount() == 0)
 					selectGamePanel.remove(selectGameToAddBotsPanel);
 			}
 		});
 	}
 
 	/**
-	 * Prompts the server to add a bot to a Game with gameID
+	 * Prompts the server to add a bot to a Game with gameId
 	 * 
-	 * @param gameID - of game
+	 * @param gameId - of game
 	 */
-	private void addBot(String gameID) {
-		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
+	private void addBot(String gameId) {
+		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(gameID + ": Adding bots, failed to add bot. " + caught.getMessage());
+				systemMessages.setHTML(gameId + ": Adding bots, failed to add bot. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				systemMessages.setHTML(gameID + ": Bot added.");
+				systemMessages.setHTML(gameId + ": Bot added.");
 			}
 		});
 	}

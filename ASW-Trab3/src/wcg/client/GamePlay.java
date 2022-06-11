@@ -29,7 +29,7 @@ public abstract class GamePlay extends SubPanel {
 	private Widget southPanel = new VerticalPanel();
 
 	// To process all events
-	private String gameID;
+	private String gameId;
 
 	// To process RoundUpdateEvent, RoundConclusionEvent, GameEndEvent
 	private Map<String, List<Card>> onTable;
@@ -66,7 +66,7 @@ public abstract class GamePlay extends SubPanel {
 	 */
 	protected GamePlay(String gameId) {
 		super(username, password);
-		this.gameID = gameId;
+		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
 		processEvents();
 
@@ -110,7 +110,7 @@ public abstract class GamePlay extends SubPanel {
 	 * @return the gameId
 	 */
 	protected String getGameId() {
-		return gameID;
+		return gameId;
 	}
 
 	/**
@@ -166,11 +166,11 @@ public abstract class GamePlay extends SubPanel {
 	 * Requests a list of Recent Events from the server, and processes them
 	 */
 	private void processEvents() {
-		cardGameService.getRecentEvents(gameID, username, password, new AsyncCallback<List<GameEvent>>() {
+		cardGameService.getRecentEvents(gameId, username, password, new AsyncCallback<List<GameEvent>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(gameID + ": Failed to get recent events. " + caught.getMessage());
+				systemMessages.setHTML(gameId + ": Failed to get recent events. " + caught.getMessage());
 			}
 
 			@Override
@@ -179,7 +179,7 @@ public abstract class GamePlay extends SubPanel {
 					if (event instanceof SendCardsEvent) {
 						cardsOnHand.addAll(((SendCardsEvent) event).getCards());
 
-						systemMessages.setHTML(gameID + ": Cards have been given.");
+						systemMessages.setHTML(gameId + ": Cards have been given.");
 
 						redoSouthPanel();
 					}
@@ -190,7 +190,7 @@ public abstract class GamePlay extends SubPanel {
 						mode = ((RoundUpdateEvent) event).getMode();
 
 						String messageToSet;
-						String gameSection = gameID + ": ";
+						String gameSection = gameId + ": ";
 						String turnSection = "Cards have been played.";
 
 						if (hasTurn != null)
@@ -213,7 +213,7 @@ public abstract class GamePlay extends SubPanel {
 						hasPlayedThisTurn = false;
 
 						String messageToSet;
-						String roundsSection = gameID + ": Round #" + roundsCompleted + " is complete. ";
+						String roundsSection = gameId + ": Round #" + roundsCompleted + " is complete. ";
 						String turnSection = "";
 
 						if (hasTurn != null)
@@ -237,9 +237,9 @@ public abstract class GamePlay extends SubPanel {
 						repeatScheduledTask = false;
 
 						systemMessages
-								.setHTML(gameID + ": " + winner + " has won with " + points.get(winner) + " points.");
+								.setHTML(gameId + ": " + winner + " has won with " + points.get(winner) + " points.");
 
-						tabPanel.remove(gameID);
+						tabPanel.remove(gameId);
 
 						tabPanel.selectTab(SELECT_GAME_TAB);
 					}

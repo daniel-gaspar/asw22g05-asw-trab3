@@ -22,7 +22,7 @@ public class WaitingTab extends SubPanel {
 
 	private Widget waitingTab = new HTML("Waiting for Game to Start");
 
-	private String gameID;
+	private String gameId;
 	private boolean owner_flag;
 
 	private boolean repeat = true;
@@ -30,9 +30,9 @@ public class WaitingTab extends SubPanel {
 	private static final int TIMER_DELAY = 10 * 1000; // 10 seconds
 	private static final int GAME_START_TIMEOUT = 60 * 1000; // 1 minute
 
-	public WaitingTab(String gameID, boolean owner) {
+	public WaitingTab(String gameId, boolean owner) {
 		super(username, password);
-		this.gameID = gameID;
+		this.gameId = gameId;
 		this.owner_flag = owner;
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
@@ -59,7 +59,7 @@ public class WaitingTab extends SubPanel {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(gameID + ": Failed to verify available game infos while waiting to start. "
+				systemMessages.setHTML(gameId + ": Failed to verify available game infos while waiting to start. "
 						+ caught.getMessage());
 			}
 
@@ -68,19 +68,19 @@ public class WaitingTab extends SubPanel {
 				for (GameInfo gameInfo : availableGameInfos) {
 					String currentGameName = gameInfo.getGameName();
 					int currentPlayersCount = gameInfo.getPlayersCount();
-					String currentGameID = gameInfo.getGameId();
+					String currentGameId = gameInfo.getGameId();
 
-					if (currentGameID.equals(gameID)) {
+					if (currentGameId.equals(gameId)) {
 						if (currentPlayersCount == AuxMethods.numberOfPlayers(currentGameName)) {
 							repeat = false;
-							tabPanel.remove(gameID);
+							tabPanel.remove(gameId);
 							if ("WAR".equals(currentGameName)) {
-								tabPanel.add(new GamePlayWAR(gameID).getGamePlay(), "Play: " + gameID, gameID);
+								tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play: " + gameId, gameId);
 							}
 							if ("HEARTS".equals(currentGameName)) {
-								tabPanel.add(new GamePlayHEARTS(gameID).getGamePlay(), "Play: " + gameID, gameID);
+								tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play: " + gameId, gameId);
 							}
-							tabPanel.selectTab(gameID);
+							tabPanel.selectTab(gameId);
 						}
 					}
 				}
@@ -93,16 +93,16 @@ public class WaitingTab extends SubPanel {
 			@Override
 			public void onFailure(Throwable caught) {
 				systemMessages
-						.setHTML(gameID + ": Failed to get available game infos while checking whether to add bots. "
+						.setHTML(gameId + ": Failed to get available game infos while checking whether to add bots. "
 								+ caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(List<GameInfo> availableGameInfos) {
 				for (GameInfo gameInfo : availableGameInfos) {
-					String currentGameID = gameInfo.getGameId();
+					String currentGameId = gameInfo.getGameId();
 
-					if (currentGameID.equals(gameID)) {
+					if (currentGameId.equals(gameId)) {
 						Date currentLastAccessDate = gameInfo.getLastAccessDate();
 						Date nowDate = new Date();
 
@@ -111,7 +111,7 @@ public class WaitingTab extends SubPanel {
 							String currentGameName = gameInfo.getGameName();
 							int currentPlayersCount = gameInfo.getPlayersCount();
 							for (int i = currentPlayersCount; i < AuxMethods.numberOfPlayers(currentGameName); i++)
-								addBot(gameID);
+								addBot(gameId);
 
 						}
 					}
@@ -121,20 +121,20 @@ public class WaitingTab extends SubPanel {
 	}
 
 	/**
-	 * Prompts the server to add a bot to a Game with gameID
+	 * Prompts the server to add a bot to a Game with gameId
 	 * 
-	 * @param gameID - of game
+	 * @param gameId - of game
 	 */
-	private void addBot(String gameID) {
-		cardGameService.addBotPlayer(gameID, new AsyncCallback<Void>() {
+	private void addBot(String gameId) {
+		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(gameID + ": Adding bots, failed to add bot. " + caught.getMessage());
+				systemMessages.setHTML(gameId + ": Adding bots, failed to add bot. " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				systemMessages.setHTML(gameID + ": Bot added.");
+				systemMessages.setHTML(gameId + ": Bot added.");
 			}
 		});
 	}

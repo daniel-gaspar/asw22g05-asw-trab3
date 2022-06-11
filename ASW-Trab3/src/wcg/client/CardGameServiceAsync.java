@@ -20,7 +20,7 @@ public interface CardGameServiceAsync {
 
 	public void getGameNames(AsyncCallback<List<String>> callback);
 
-	public void getRecentEvents(String gameID, String nick, String password, AsyncCallback<List<GameEvent>> callback);
+	public void getRecentEvents(String gameId, String nick, String password, AsyncCallback<List<GameEvent>> callback);
 
 	public void playCards(String gameId, String nick, String password, List<Card> cards, AsyncCallback<Void> callback);
 
