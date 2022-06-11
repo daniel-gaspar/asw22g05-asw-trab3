@@ -36,6 +36,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
+		gamePlay.setWidth("1100px");
 	}
 
 	/**
