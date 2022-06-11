@@ -119,23 +119,4 @@ public class WaitingTab extends SubPanel {
 			}
 		});
 	}
-
-	/**
-	 * Prompts the server to add a bot to a Game with gameId
-	 * 
-	 * @param gameId - of game
-	 */
-	private void addBot(String gameId) {
-		cardGameService.addBotPlayer(gameId, new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				systemMessages.setHTML(gameId + ": Adding bots, failed to add bot. " + caught.getMessage());
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				systemMessages.setHTML(gameId + ": Bot added.");
-			}
-		});
-	}
 }
