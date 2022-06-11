@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import wcg.shared.GameInfo;
@@ -50,7 +49,7 @@ public class GameCreation extends SubPanel {
 	private final ListBox ownedGameIdList = new ListBox();
 	private final Button btnAddBots = new Button("Add Bots to Game");
 
-	public GameCreation(TabPanel tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
+	public GameCreation(TabPanelTitles tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
 		super(username, password);
 		this.gameCreation = onCreationInitialize();
 	}
