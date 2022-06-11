@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -119,7 +121,7 @@ public class GamePlayWAR extends GamePlay {
 	protected Widget drawCardsOnTable() {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
-		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		cardsOnTablePanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
@@ -131,6 +133,7 @@ public class GamePlayWAR extends GamePlay {
 				playerPosition.put(key, DockPanel.NORTH);
 
 			VerticalPanel playerContainer = new VerticalPanel();
+			playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 			HorizontalPanel cardsContainer = new HorizontalPanel();
 			cardsContainer.clear();
 			for (Card card : getOnTable().get(key)) {
@@ -145,6 +148,7 @@ public class GamePlayWAR extends GamePlay {
 		for (DockLayoutConstant position : order) {
 			if (!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
+				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 				HorizontalPanel cardsContainer = new HorizontalPanel();
 				cardsContainer.clear();
 

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -98,7 +99,7 @@ public class GamePlayHEARTS extends GamePlay {
 	protected Widget drawCardsOnTable() {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
-		cardsOnTablePanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+		cardsOnTablePanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		HorizontalPanel centerPanel = new HorizontalPanel();
 		centerPanel.setPixelSize(83,  120);
 		cardsOnTablePanel.add(centerPanel, DockPanel.CENTER);
@@ -114,6 +115,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 			Card card = getOnTable().get(key).get(0);
 			VerticalPanel playerContainer = new VerticalPanel();
+			playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 			playerContainer.add(Cards.createCard(card));
 			playerContainer.add(new HTML("Player: " + key));
 			
@@ -123,6 +125,7 @@ public class GamePlayHEARTS extends GamePlay {
 		for(DockLayoutConstant position: order) {
 			if(!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
+				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 				playerContainer.add(Cards.createCard("facedown"));
 				
 				HTML playerName = new HTML("Player: Opponent");
