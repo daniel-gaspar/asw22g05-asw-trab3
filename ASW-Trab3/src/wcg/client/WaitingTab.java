@@ -5,8 +5,6 @@ package wcg.client;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -39,8 +37,6 @@ public class WaitingTab extends SubPanel {
 
 			@Override
 			public boolean execute() {
-				Logger logger = Logger.getLogger("nameOfLogger");
-				logger.log(Level.SEVERE, "executing waitingTabScheduler");
 				if (repeat)
 					verifyStartGame();
 				if (FLAG_AUTOBOTS_ROLLOUT && owner_flag && repeat)

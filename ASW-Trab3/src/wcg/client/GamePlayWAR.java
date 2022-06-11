@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -67,11 +65,6 @@ public class GamePlayWAR extends GamePlay {
 						} else {
 							cardsToPlay.add(getCardsOnHand().get(0));
 						}
-
-						Logger logger = Logger.getLogger("nameOfLogger");
-
-						logger.log(Level.SEVERE, cardsToPlay.toString());
-						logger.log(Level.SEVERE, getCardsOnHand().toString());
 
 						cardGameService.playCards(getGameId(), username, password, cardsToPlay,
 								new AsyncCallback<Void>() {
