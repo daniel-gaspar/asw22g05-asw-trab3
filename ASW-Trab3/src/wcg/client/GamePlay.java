@@ -121,34 +121,6 @@ public abstract class GamePlay extends SubPanel {
 	}
 
 	/**
-	 * @return the roundsCompleted
-	 */
-	protected int getRoundsCompleted() {
-		return roundsCompleted;
-	}
-
-	/**
-	 * @return the points
-	 */
-	protected Map<String, Integer> getPoints() {
-		return points;
-	}
-
-	/**
-	 * @return the winner
-	 */
-	protected String getWinner() {
-		return winner;
-	}
-
-	/**
-	 * @return the hasTurn
-	 */
-	protected String getHasTurn() {
-		return hasTurn;
-	}
-
-	/**
 	 * @return the mode
 	 */
 	protected String getMode() {
