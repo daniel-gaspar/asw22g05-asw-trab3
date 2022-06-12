@@ -189,6 +189,13 @@ public class CardCollection implements Iterable<Card> {
 	}
 
 	/**
+	 * Sort the cards in this collection, using the comparator
+	 */
+	public void sort() {
+		cards.sort(comparator);
+	}
+
+	/**
 	 * Removes duplicates in this collection. If a card exists multiple times, the
 	 * first occurrence is kept and equals cards to the right are removed.
 	 * 
