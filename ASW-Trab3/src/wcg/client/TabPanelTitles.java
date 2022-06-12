@@ -20,40 +20,62 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class TabPanelTitles extends TabPanel {
 
-	private List<String> tabTitles = new ArrayList<>();
+	private List<String> tabIds = new ArrayList<>();
 
 	public TabPanelTitles() {
 		super();
 	}
 
 	@Override
-	public void add(Widget w, String tabTitle) {
-		super.add(w, tabTitle);
-		tabTitles.add(tabTitle);
+	public void add(Widget w, String tabId) {
+		super.add(w, tabId);
+		tabIds.add(tabId);
 	}
 
-	public void add(Widget w, String tabText, String tabTitle) {
+	/**
+	 * Adds a Widget w to the TabPanel, while specifying the Text tabText as the
+	 * displayed on the Tab and the identifier with tabId
+	 * 
+	 * @param w       - Widget to add
+	 * @param tabText - Text to display on Tab
+	 * @param tabId   - Identifier of the Tab
+	 */
+	public void add(Widget w, String tabText, String tabId) {
 		super.add(w, tabText);
-		tabTitles.add(tabTitle);
+		tabIds.add(tabId);
 	}
 
-	public void add(Widget panel, Widget tab, String tabTitle) {
+	/**
+	 * Adds a Widget panel to the TabPanel, while specifying the Widget tab as the
+	 * display on the Tab and the identifier with tabId
+	 * 
+	 * @param panel - Widget to add
+	 * @param tab   - Widget to display on Tab
+	 * @param tabId - Identifier of the Tab
+	 */
+	public void add(Widget panel, Widget tab, String tabId) {
 		super.add(panel, tab);
-		tabTitles.add(tabTitle);
+		tabIds.add(tabId);
 	}
 
 	@Override
 	public boolean remove(int index) {
 		boolean removed = super.remove(index);
 		if (removed) {
-			tabTitles.remove(index);
+			tabIds.remove(index);
 			return removed;
 		}
 		return removed;
 	}
 
-	public boolean remove(String tabTitle) {
-		int tabIndex = getTabIndex(tabTitle);
+	/**
+	 * Removes a Tab with the specified tabId
+	 * 
+	 * @param tabId - Identifier of the Tab
+	 * @return Whether the Tab was successfully removed or not
+	 */
+	public boolean remove(String tabId) {
+		int tabIndex = getTabIndex(tabId);
 		boolean removed = remove(tabIndex);
 		return removed;
 	}
@@ -61,23 +83,40 @@ public class TabPanelTitles extends TabPanel {
 	@Override
 	public void clear() {
 		super.clear();
-		tabTitles.clear();
+		tabIds.clear();
 	}
 
-	public String getTabTitle(int index) {
-		return tabTitles.get(index);
+	/**
+	 * Returns the Identifier of the Tab of a given index
+	 * 
+	 * @param index - Index of the Tab
+	 * @return Identifier of the Tab
+	 */
+	public String getTabId(int index) {
+		return tabIds.get(index);
 	}
 
-	public int getTabIndex(String tabTitle) {
-		for (int i = 0; i < tabTitles.size(); i++) {
-			if (tabTitle.equals(tabTitles.get(i)))
+	/**
+	 * Returns the index of the Tab with a given Identifier
+	 * 
+	 * @param tabId - Identifier of the Tab
+	 * @return Index of the Tab
+	 */
+	public int getTabIndex(String tabId) {
+		for (int i = 0; i < tabIds.size(); i++) {
+			if (tabId.equals(tabIds.get(i)))
 				return i;
 		}
 		return -1;
 	}
 
-	public void selectTab(String tabTitle) {
-		int tabIndex = getTabIndex(tabTitle);
+	/**
+	 * Selects a Tab while using it's Identifier
+	 * 
+	 * @param tabId - Identifier of the Tab
+	 */
+	public void selectTab(String tabId) {
+		int tabIndex = getTabIndex(tabId);
 		super.selectTab(tabIndex);
 	}
 }
