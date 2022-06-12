@@ -31,7 +31,7 @@ public class UserRegistry extends MainPanel {
 	private final HTML passwordLabel = new HTML("Password: ");
 	private final PasswordTextBox passwordBox = new PasswordTextBox();
 
-	public UserRegistry(TabPanelTitles tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
+	public UserRegistry(TabPanelIds tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
 		super(tabPanel, cardGameService, messages);
 		userRegistry = onRegisterInitialize();
 	}

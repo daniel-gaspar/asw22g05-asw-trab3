@@ -17,43 +17,48 @@ public class WebCardGame implements EntryPoint {
 	/**
 	 * All the Widgets necessary to add to the RootPanel tab
 	 */
-	private final TabPanelTitles tabPanel = new TabPanelTitles();
+	private final TabPanelIds tabPanel = new TabPanelIds();
+	private final TabBar tabPanelBar = tabPanel.getTabBar();
+	private final DeckPanel tabPanelDeck = tabPanel.getDeckPanel();
 	private final HorizontalPanel systemMessagesPanel = new HorizontalPanel();
 	private final HTML systemMessagesStatic = new HTML("System Messages: ");
 	private final HTML systemMessages = new HTML("");
+	private final HorizontalPanel selectGameNotLoggedIn = new HorizontalPanel();
+	private final HTML notLoggedIn = new HTML("Not logged in yet");
 
 	@Override
 	public void onModuleLoad() {
+		// Starts by applying StyleNames and other layout settings to the elements
 		tabPanel.setStyleName("wcg-TabPanel");
+
+		tabPanelBar.addStyleName("wcg-TabPanelBar");
+		tabPanelDeck.addStyleName("wcg-TabPanelDeck");
+
+		systemMessagesPanel.setSpacing(5);
+		systemMessagesStatic.setStyleName("wcg-Text");
+		systemMessages.setStyleName("wcg-Text");
+
+		selectGameNotLoggedIn.setStyleName("wcg-Panel");
+		notLoggedIn.setStyleName("wcg-Text");
+
 		// Create a tab panel with two tabs, each of which displays a different
 		// piece of text.
 		tabPanel.add(new UserRegistry(tabPanel, cardGameService, systemMessages).getUserRegistry(),
 				"Login/Registration");
 
-		HorizontalPanel selectGameNotLoggedIn = new HorizontalPanel();
-		selectGameNotLoggedIn.setStyleName("wcg-Panel");
-		HTML notLoggedIn = new HTML("Not logged in yet");
-		notLoggedIn.setStyleName("wcg-Text");
+		// Prepares the elements for the 'Select Game' tab, and adds it to tabPanel
 		selectGameNotLoggedIn.add(notLoggedIn);
 		tabPanel.add(selectGameNotLoggedIn, "Select Game");
 
 		// Show the 'Login/Registry' tab initially.
 		tabPanel.selectTab(0);
 
-		// Create a panel for System Messages (caught errors, and others)
-		systemMessagesPanel.setSpacing(5);
-		systemMessagesStatic.setStyleName("wcg-Text");
-		systemMessages.setStyleName("wcg-Text");
+		// Prepares a Panel for System Messages (caught errors, and others)
 		systemMessagesPanel.add(systemMessagesStatic);
 		systemMessagesPanel.add(systemMessages);
 
 		// Add the elements to the root panel
 		rootPanel.add(systemMessagesPanel);
-
-		TabBar tabBar = tabPanel.getTabBar();
-		DeckPanel deckPanel = tabPanel.getDeckPanel();
-		tabBar.addStyleName("wcg-TabPanelBar");
-		deckPanel.addStyleName("wcg-TabPanelDeck");
 		rootPanel.add(tabPanel);
 	}
 }

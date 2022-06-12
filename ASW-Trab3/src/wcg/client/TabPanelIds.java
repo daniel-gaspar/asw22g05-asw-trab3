@@ -10,19 +10,19 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Extension of TabPanel to be able to make adjustments by using the tab's
- * title/text
+ * Extension of TabPanel to be able to make adjustments by using the Tab's
+ * Identifier
  * 
  * Inspired by
  * https://stackoverflow.com/questions/24936400/how-to-get-tab-text-in-gwt
  * 
- * Assumes that each Tab's Title is unique
+ * Assumes that each Tab's Identifier is unique
  */
-public class TabPanelTitles extends TabPanel {
+public class TabPanelIds extends TabPanel {
 
 	private List<String> tabIds = new ArrayList<>();
 
-	public TabPanelTitles() {
+	public TabPanelIds() {
 		super();
 	}
 

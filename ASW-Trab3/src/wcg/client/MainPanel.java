@@ -9,13 +9,13 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public abstract class MainPanel {
 
-	protected static TabPanelTitles tabPanel;
+	protected static TabPanelIds tabPanel;
 	protected static CardGameServiceAsync cardGameService;
 	protected static HTML systemMessages;
 
 	protected static final String SELECT_GAME_TAB = "selectGameTab";
 
-	public MainPanel(TabPanelTitles tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
+	public MainPanel(TabPanelIds tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
 		MainPanel.tabPanel = tabPanel;
 		MainPanel.cardGameService = cardGameService;
 		MainPanel.systemMessages = messages;
