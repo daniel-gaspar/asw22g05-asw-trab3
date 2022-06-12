@@ -27,6 +27,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 	private static final int CARDS_ON_HAND_PANEL_WIDTH = 900;
 	private static final int CARD_POSITION_OFFSET = 60;
+	private static final int CARD_WIDTH = 83;
 	/**
 	 * The Widgets which will belong in centerPanel and southPanel of GamePlay,
 	 * respectively
@@ -191,7 +192,7 @@ public class GamePlayHEARTS extends GamePlay {
 	private int getInitialLeftPosition() {
 		int panelWidth = CARDS_ON_HAND_PANEL_WIDTH;
 		int numberOfCards = getCardsOnHand().size();
-		int spaceForCards = CARD_POSITION_OFFSET * numberOfCards;
+		int spaceForCards = CARD_POSITION_OFFSET * (numberOfCards-1) + CARD_WIDTH;
 
 		return (panelWidth - spaceForCards) / 2;
 	}
