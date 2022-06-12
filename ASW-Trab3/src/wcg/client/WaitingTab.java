@@ -7,8 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.layout.client.Layout.Alignment;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -18,6 +23,8 @@ import wcg.shared.GameInfo;
  *
  */
 public class WaitingTab extends SubPanel {
+
+	private static final boolean FLAG_AUTOBOTS_ROLLOUT = false;
 
 	private Widget waitingTab;
 
@@ -48,11 +55,13 @@ public class WaitingTab extends SubPanel {
 
 		}, TIMER_DELAY);
 	}
-	
+
 	private void waitingTabInitialization() {
 		waitingTab = new HorizontalPanel();
 		waitingTab.setStyleName("wcg-Panel");
-		((HorizontalPanel) waitingTab).add(new HTML("Waiting for game to start"));
+		HTML waitingGameLabel = new HTML("Waiting for the game to start");
+		waitingGameLabel.setStyleName("wcg-Text");
+		((HorizontalPanel) waitingTab).add(waitingGameLabel);
 	}
 
 	public Widget getWaitingTab() {
@@ -78,11 +87,27 @@ public class WaitingTab extends SubPanel {
 						if (currentPlayersCount == AuxMethods.numberOfPlayers(currentGameName)) {
 							repeat = false;
 							tabPanel.remove(gameId);
+							HorizontalPanel tabWidget = new HorizontalPanel();
+							tabWidget.addStyleName("wcg-TabWidget");
+							HTML tabWidgetText = new HTML("Play: " + gameId);
+							tabWidgetText.addStyleName("wcg-TabWidgetText");
+							Button tabWidgetClose = new Button("x", new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									tabPanel.selectTab(SELECT_GAME_TAB);
+									tabPanel.remove(gameId);
+								}
+							});
+							tabWidgetClose.addStyleName("wcg-TabWidgetClose");
+
+							tabWidget.add(tabWidgetText);
+							tabWidget.add(tabWidgetClose);
+
 							if ("WAR".equals(currentGameName)) {
-								tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), "Play: " + gameId, gameId);
+								tabPanel.add(new GamePlayWAR(gameId).getGamePlay(), tabWidget, gameId);
 							}
 							if ("HEARTS".equals(currentGameName)) {
-								tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), "Play: " + gameId, gameId);
+								tabPanel.add(new GamePlayHEARTS(gameId).getGamePlay(), tabWidget, gameId);
 							}
 							tabPanel.selectTab(gameId);
 						}
