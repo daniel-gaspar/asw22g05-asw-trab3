@@ -1,10 +1,58 @@
-.gwt-TabPanel {
-	display: flex;
-	justify-content: center;
-	padding: 10px;
+.wcg-TabPanel {
+	display: flex !important;
+	justify-content: center !important;
+	padding: 10px !important;
 }
 
-.gwt-GameArea {
+.wcg-Panel {
+	border-radius: 10px !important;
+	display: flex !important;
+	height: 550px !important;
+	width: 900px !important;
+}
+
+.wcg-GameArea {
 	background-color: green;
 }
 
+.wcg-GameAreaCardsOnHand {
+	margin-top: 2px !important;
+	width: 900px !important; 
+	height: 120px !important;
+}
+
+.wcg-GameAreaOnTableCenterPanel {
+	width: 83px !important;
+	height: 138px !important;
+}
+
+.wcg-Text {
+	font-family: Verdana, sans-serif;
+	font-size: 1.1em !important;
+}
+
+.wcg-TextPlayerWithTurn {
+	font-weight: bold !important;
+}
+
+.wcg-TabPanelDeck {
+	border-bottom-left-radius: 10px !important;
+	border-bottom-right-radius: 10px !important;
+}
+
+.wcg-TabPanelBar {
+	border-top-left-radius: 10px !important;
+	border-top-right-radius: 10px !important;
+}
+
+.wcg-TabWidget {
+	width: 130px !important;
+}
+
+.wcg-TabWidgetClose {
+	float: right !important;
+	height: 15px !important;
+	width: 15px !important;
+	padding: 1px 1px !important;
+	font-size: 7px !important;
+}
