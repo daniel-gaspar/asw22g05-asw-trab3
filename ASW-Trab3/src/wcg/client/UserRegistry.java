@@ -48,11 +48,15 @@ public class UserRegistry extends MainPanel {
 
 		// Username
 		usernameBox.ensureDebugId("regUsrTxtBox");
+		usernameLabel.setStyleName("wcg-Text");
+		usernameBox.setStyleName("wcg-Text");
 		vPanel.add(usernameLabel);
 		vPanel.add(usernameBox);
 
 		// Password
 		passwordBox.ensureDebugId("regPwdBox");
+		passwordLabel.setStyleName("wcg-Text");
+		passwordBox.setStyleName("wcg-Text");
 		vPanel.add(passwordLabel);
 		vPanel.add(passwordBox);
 
@@ -83,7 +87,9 @@ public class UserRegistry extends MainPanel {
 							// Adds a new tab with only the Username
 							HorizontalPanel userPanel = new HorizontalPanel();
 							userPanel.setStyleName("wcg-Panel");
-							userPanel.add(new HTML("Username: " + username));
+							HTML newUsernameLabel = new HTML("Username: " + username);
+							newUsernameLabel.setStyleName("wcg-Text");
+							userPanel.add(newUsernameLabel);
 							tabPanel.add(userPanel, "User");
 
 							// Adds a new "Select Game" tab
@@ -98,6 +104,7 @@ public class UserRegistry extends MainPanel {
 			}
 		});
 		registerButton.ensureDebugId("cwBasicButton-normal");
+		registerButton.addStyleName("wcg-Text");
 		vPanel.add(registerButton);
 
 		// Return the panel

@@ -101,7 +101,9 @@ public class GameCreation extends SubPanel {
 		for (String gameName : result)
 			gameList.addItem(gameName);
 
+		gameModeListLabel.setStyleName("wcg-Text");
 		selectGameModePanel.add(gameModeListLabel);
+		gameList.addStyleName("wcg-Text");
 		selectGameModePanel.add(gameList);
 
 		selectGamePanel.add(selectGameModePanel);
@@ -123,8 +125,13 @@ public class GameCreation extends SubPanel {
 
 		populateGameIdList();
 
+		avlbGamesLabel.setStyleName("wcg-Text");
 		selectGameIdPanel.add(avlbGamesLabel);
+		gameIdList.addStyleName("wcg-Text");
 		selectGameIdPanel.add(gameIdList);
+		btnJoinGame.addStyleName("wcg-Text");
+		btnAddBots.addStyleName("wcg-Text");
+		ownedGameIdList.addStyleName("wcg-Text");
 		selectGameIdPanel.add(btnJoinGame);
 		selectGamePanel.add(selectGameIdPanel);
 
@@ -161,6 +168,7 @@ public class GameCreation extends SubPanel {
 					ownedGameIdList.setMultipleSelect(false);
 					ownedGameIdList.setVisibleItemCount(10);
 
+					ownedGamesLabel.setStyleName("wcg-Text");
 					selectGameToAddBotsPanel.add(ownedGamesLabel);
 					selectGameToAddBotsPanel.add(ownedGameIdList);
 					selectGameToAddBotsPanel.add(btnAddBots);
