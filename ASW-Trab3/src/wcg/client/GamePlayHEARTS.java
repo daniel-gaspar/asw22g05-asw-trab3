@@ -192,7 +192,7 @@ public class GamePlayHEARTS extends GamePlay {
 	private int getInitialLeftPosition() {
 		int panelWidth = CARDS_ON_HAND_PANEL_WIDTH;
 		int numberOfCards = getCardsOnHand().size();
-		int spaceForCards = CARD_POSITION_OFFSET * (numberOfCards-1) + CARD_WIDTH;
+		int spaceForCards = CARD_POSITION_OFFSET * (numberOfCards - 1) + CARD_WIDTH;
 
 		return (panelWidth - spaceForCards) / 2;
 	}

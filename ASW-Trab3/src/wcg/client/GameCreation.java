@@ -43,13 +43,25 @@ public class GameCreation extends SubPanel {
 	private final HTML gameModeListLabel = new HTML("List of Games:");
 	private final ListBox gameIdList = new ListBox();
 	private final HTML avlbGamesLabel = new HTML("Available Games:");
-	private final Button btnJoinGame = new Button("Join Game");
+	private final Button btnJoinGame = new Button("Join Game", new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			// Joins registered player to selected game
+			joinGame();
+		}
+	});
 	private final VerticalPanel selectGameToAddBotsPanel = new VerticalPanel();
 	private final HTML ownedGamesLabel = new HTML("Owned Games:");
 	private final ListBox ownedGameIdList = new ListBox();
-	private final Button btnAddBots = new Button("Add Bots to Game");
+	private final Button btnAddBots = new Button("Add Bots to Game", new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			forceStartGame();
+		}
+	});
 
-	public GameCreation(TabPanelTitles tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
+	public GameCreation(TabPanelTitles tabPanel, String username, String password,
+			CardGameServiceAsync cardGameService) {
 		super(username, password);
 		this.gameCreation = onCreationInitialize();
 	}
@@ -110,14 +122,6 @@ public class GameCreation extends SubPanel {
 
 		populateGameIdList();
 
-		// Joins registered player to selected game
-		btnJoinGame.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				joinGame();
-			}
-		});
-
 		selectGameIdPanel.add(avlbGamesLabel);
 		selectGameIdPanel.add(gameIdList);
 		selectGameIdPanel.add(btnJoinGame);
@@ -155,13 +159,6 @@ public class GameCreation extends SubPanel {
 					ownedGameIdList.setWidth("11em");
 					ownedGameIdList.setMultipleSelect(false);
 					ownedGameIdList.setVisibleItemCount(10);
-
-					btnAddBots.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							forceStartGame();
-						}
-					});
 
 					selectGameToAddBotsPanel.add(ownedGamesLabel);
 					selectGameToAddBotsPanel.add(ownedGameIdList);
