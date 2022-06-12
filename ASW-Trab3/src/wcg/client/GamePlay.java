@@ -68,7 +68,8 @@ public abstract class GamePlay extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
-		gamePlay.setStyleName("gwt-GameArea");
+		gamePlay.setStyleName("wcg-Panel");
+		gamePlay.addStyleName("wcg-GameArea");
 		processEvents();
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
@@ -90,7 +91,6 @@ public abstract class GamePlay extends SubPanel {
 	 * @return gamePlayPanel
 	 */
 	private Widget onGamePlayInitialize() {
-		gamePlayPanel.setStyleName("cw-DockPanel");
 		gamePlayPanel.setSpacing(2);
 		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 

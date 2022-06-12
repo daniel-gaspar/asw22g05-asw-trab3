@@ -22,6 +22,7 @@ public class WebCardGame implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		tabPanel.setStyleName("wcg-TabPanel");
 		// Create a tab panel with two tabs, each of which displays a different
 		// piece of text.
 		tabPanel.add(new UserRegistry(tabPanel, cardGameService, systemMessages).getUserRegistry(),

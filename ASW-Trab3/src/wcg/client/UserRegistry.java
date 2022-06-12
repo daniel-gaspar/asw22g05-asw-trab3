@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,7 +33,7 @@ public class UserRegistry extends MainPanel {
 
 	public UserRegistry(TabPanelTitles tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
 		super(tabPanel, cardGameService, messages);
-		this.userRegistry = onRegisterInitialize();
+		userRegistry = onRegisterInitialize();
 	}
 
 	public Widget getUserRegistry() {
@@ -42,6 +43,8 @@ public class UserRegistry extends MainPanel {
 	public Widget onRegisterInitialize() {
 		// Create a panel to layout the widgets
 		vPanel.setSpacing(5);
+		vPanel.setStyleName("wcg-Panel");
+		vPanel.addStyleName("wcg-UserRegistry");
 
 		// Username
 		usernameBox.ensureDebugId("regUsrTxtBox");
@@ -78,7 +81,10 @@ public class UserRegistry extends MainPanel {
 							tabPanel.clear();
 
 							// Adds a new tab with only the Username
-							tabPanel.add(new HTML("Username: " + username), "User");
+							HorizontalPanel userPanel = new HorizontalPanel();
+							userPanel.setStyleName("wcg-Panel");
+							userPanel.add(new HTML("Username: " + username));
+							tabPanel.add(userPanel, "User");
 
 							// Adds a new "Select Game" tab
 							tabPanel.add(

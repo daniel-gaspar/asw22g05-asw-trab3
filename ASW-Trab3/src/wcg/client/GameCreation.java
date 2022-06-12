@@ -63,7 +63,8 @@ public class GameCreation extends SubPanel {
 	public GameCreation(TabPanelTitles tabPanel, String username, String password,
 			CardGameServiceAsync cardGameService) {
 		super(username, password);
-		this.gameCreation = onCreationInitialize();
+		gameCreation = onCreationInitialize();
+		gameCreation.setStyleName("wcg-Panel");
 	}
 
 	public Widget getGameCreation() {

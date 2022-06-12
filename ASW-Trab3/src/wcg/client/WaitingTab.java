@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import wcg.shared.GameInfo;
@@ -18,7 +19,7 @@ import wcg.shared.GameInfo;
  */
 public class WaitingTab extends SubPanel {
 
-	private Widget waitingTab = new HTML("Waiting for Game to Start");
+	private Widget waitingTab;
 
 	private String gameId;
 	private boolean owner_flag;
@@ -32,6 +33,7 @@ public class WaitingTab extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		this.owner_flag = owner;
+		waitingTabInitialization();
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
 
@@ -45,6 +47,12 @@ public class WaitingTab extends SubPanel {
 			}
 
 		}, TIMER_DELAY);
+	}
+	
+	private void waitingTabInitialization() {
+		waitingTab = new HorizontalPanel();
+		waitingTab.setStyleName("wcg-Panel");
+		((HorizontalPanel) waitingTab).add(new HTML("Waiting for game to start"));
 	}
 
 	public Widget getWaitingTab() {
