@@ -37,6 +37,11 @@ public class TabPanelTitles extends TabPanel {
 		tabTitles.add(tabTitle);
 	}
 
+	public void add(Widget panel, Widget tab, String tabTitle) {
+		super.add(panel, tab);
+		tabTitles.add(tabTitle);
+	}
+
 	@Override
 	public boolean remove(int index) {
 		boolean removed = super.remove(index);
