@@ -31,11 +31,11 @@ public class GamePlayWAR extends GamePlay {
 
 	private final Map<String, DockLayoutConstant> playerPosition = new HashMap<>();
 	private final Map<DockLayoutConstant, Widget> cardsPlacement = new HashMap<>();
-	private static final DockLayoutConstant[] order = { DockPanel.SOUTH, DockPanel.NORTH };
+	private static final DockLayoutConstant[] POSITION_ORDER = { DockPanel.SOUTH, DockPanel.NORTH };
 
 	public GamePlayWAR(String gameId) {
 		super(gameId);
-		cardsOnHandPanel.setStyleName("wcg-CardsOnHand");
+		cardsOnHandPanel.setStyleName("wcg-GameAreaCardsOnHand");
 	}
 
 	/**
@@ -128,6 +128,7 @@ public class GamePlayWAR extends GamePlay {
 				playerPosition.put(key, DockPanel.NORTH);
 
 			VerticalPanel playerContainer = new VerticalPanel();
+			playerContainer.setStyleName("wcg-GameAreaOnTablePlayer");
 			playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 			HorizontalPanel cardsContainer = new HorizontalPanel();
 			cardsContainer.clear();
@@ -135,12 +136,15 @@ public class GamePlayWAR extends GamePlay {
 				cardsContainer.add(Cards.createCard(card));
 			}
 			playerContainer.add(cardsContainer);
-			playerContainer.add(new HTML("Player: " + key));
+
+			HTML playerName = new HTML("Player: " + key);
+			playerName.setStyleName("wcg-Text");
+			playerContainer.add(playerName);
 
 			cardsPlacement.put(playerPosition.get(key), playerContainer);
 		}
 
-		for (DockLayoutConstant position : order) {
+		for (DockLayoutConstant position : POSITION_ORDER) {
 			if (!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
 				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -154,10 +158,11 @@ public class GamePlayWAR extends GamePlay {
 				playerContainer.add(cardsContainer);
 
 				HTML playerName = new HTML("Player: Opponent");
+				playerName.setStyleName("wcg-Text");
 
 				for (String player : playerPosition.keySet()) {
 					if (position.equals(playerPosition.get(player)))
-						playerName = new HTML("Player: " + player);
+						playerName.setHTML("Player: " + player);
 				}
 
 				playerContainer.add(playerName);

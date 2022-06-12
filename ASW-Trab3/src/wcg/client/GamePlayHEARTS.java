@@ -42,7 +42,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
-		cardsOnHandPanel.setStyleName("wcg-CardsOnHand");
+		cardsOnHandPanel.setStyleName("wcg-GameAreaCardsOnHand");
 	}
 
 	/**
@@ -127,31 +127,40 @@ public class GamePlayHEARTS extends GamePlay {
 
 		cardsPlacement.clear();
 
-		for (String key : getOnTable().keySet()) {
-			if (!playerPosition.containsKey(key)) {
-				playerPosition.put(key, nextPos());
+		for (String player : getOnTable().keySet()) {
+			if (!playerPosition.containsKey(player)) {
+				playerPosition.put(player, nextPos());
 			}
 
-			Card card = getOnTable().get(key).get(0);
+			Card card = getOnTable().get(player).get(0);
 			VerticalPanel playerContainer = new VerticalPanel();
 			playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 			playerContainer.add(Cards.createCard(card));
-			playerContainer.add(new HTML("Player: " + key));
+			HTML playerName = new HTML("Player: " + player);
+			playerName.setStyleName("wcg-Text");
+			if (player.equals(getHasTurn()))
+				playerName.addStyleName("wcg-TextPlayerWithTurn");
+			playerContainer.add(playerName);
 
-			cardsPlacement.put(playerPosition.get(key), playerContainer);
+			cardsPlacement.put(playerPosition.get(player), playerContainer);
 		}
 
 		for (DockLayoutConstant position : POSITION_ORDER) {
 			if (!cardsPlacement.containsKey(position)) {
 				VerticalPanel playerContainer = new VerticalPanel();
+				playerContainer.setStyleName("wcg-GameAreaOnTablePlayer");
 				playerContainer.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 				playerContainer.add(Cards.createCard("facedown"));
 
 				HTML playerName = new HTML("Player: Opponent");
+				playerName.setStyleName("wcg-Text");
 
 				for (String player : playerPosition.keySet()) {
-					if (position.equals(playerPosition.get(player)))
-						playerName = new HTML("Player: " + player);
+					if (position.equals(playerPosition.get(player))) {
+						playerName.setHTML("Player: " + player);
+						if (player.equals(getHasTurn()))
+							playerName.addStyleName("wcg-TextPlayerWithTurn");
+					}
 				}
 
 				playerContainer.add(playerName);

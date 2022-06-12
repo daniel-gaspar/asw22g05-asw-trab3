@@ -122,6 +122,13 @@ public abstract class GamePlay extends SubPanel {
 	}
 
 	/**
+	 * @return the hasTurn
+	 */
+	protected String getHasTurn() {
+		return hasTurn;
+	}
+
+	/**
 	 * @return the mode
 	 */
 	protected String getMode() {
