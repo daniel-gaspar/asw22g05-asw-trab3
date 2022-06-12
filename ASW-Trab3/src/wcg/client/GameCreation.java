@@ -37,16 +37,15 @@ public class GameCreation extends SubPanel {
 	private final VerticalPanel vPanel = new VerticalPanel();
 	private final HTML fetchError = new HTML("Couldn't fetch list of games");
 	private final HorizontalPanel selectGamePanel = new HorizontalPanel();
-	private final VerticalPanel selectGameModePanel = new VerticalPanel();
-	private final ListBox gameList = new ListBox();
+	private final VerticalPanel selectGameNamePanel = new VerticalPanel();
+	private final HTML gameNameListLabel = new HTML("List of Games:");
+	private final ListBox gameNameList = new ListBox();
 	private final VerticalPanel selectGameIdPanel = new VerticalPanel();
-	private final HTML gameModeListLabel = new HTML("List of Games:");
-	private final ListBox gameIdList = new ListBox();
 	private final HTML avlbGamesLabel = new HTML("Available Games:");
+	private final ListBox gameIdList = new ListBox();
 	private final Button btnJoinGame = new Button("Join Game", new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			// Joins registered player to selected game
 			joinGame();
 		}
 	});
@@ -60,11 +59,9 @@ public class GameCreation extends SubPanel {
 		}
 	});
 
-	public GameCreation(TabPanelIds tabPanel, String username, String password,
-			CardGameServiceAsync cardGameService) {
+	public GameCreation(TabPanelIds tabPanel, String username, String password, CardGameServiceAsync cardGameService) {
 		super(username, password);
 		gameCreation = onCreationInitialize();
-		gameCreation.setStyleName("wcg-Panel");
 	}
 
 	public Widget getGameCreation() {
@@ -72,8 +69,6 @@ public class GameCreation extends SubPanel {
 	}
 
 	public Widget onCreationInitialize() {
-		vPanel.setSpacing(0);
-
 		// Attempts to Fetch the list of Available Game Names
 		cardGameService.getGameNames(new AsyncCallback<List<String>>() {
 			@Override
@@ -82,8 +77,8 @@ public class GameCreation extends SubPanel {
 			}
 
 			@Override
-			public void onSuccess(List<String> result) {
-				initSelectGameMode(result);
+			public void onSuccess(List<String> gameNames) {
+				initSelectGameMode(gameNames);
 				vPanel.add(selectGameModeWidget);
 			}
 		});
@@ -91,48 +86,37 @@ public class GameCreation extends SubPanel {
 		return vPanel;
 	}
 
-	private void initSelectGameMode(List<String> result) {
-		// Panel for choosing gameMode
-		selectGameModePanel.setSpacing(10);
+	private void initSelectGameMode(List<String> gameNames) {
+		// Starts by applying StyleNames and other layout settings to the elements
+		applyStylizingSettings();
 
-		gameList.setMultipleSelect(false);
-		gameList.setVisibleItemCount(1);
+		// Iterates through the list of Game Names, adding each item to gameList
+		for (String gameName : gameNames)
+			gameNameList.addItem(gameName);
 
-		for (String gameName : result)
-			gameList.addItem(gameName);
-
-		gameModeListLabel.setStyleName("wcg-Text");
-		selectGameModePanel.add(gameModeListLabel);
-		gameList.addStyleName("wcg-Text");
-		selectGameModePanel.add(gameList);
-
-		selectGamePanel.add(selectGameModePanel);
-
-		// Panel for list of existing games
-		selectGameIdPanel.setSpacing(10);
-
-		gameIdList.ensureDebugId("cwListBox-multiBox");
-		gameIdList.setWidth("11em");
-		gameIdList.setMultipleSelect(false);
-		gameIdList.setVisibleItemCount(10);
-
-		gameList.addChangeHandler(new ChangeHandler() {
+		// Creates a Handler, making it so that whenever the selected Game Name is
+		// changed, the list of Available Games is refreshed
+		gameNameList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
 				populateGameIdList();
 			}
 		});
 
+		// Adds the Game Names label and list to the corresponding Panel
+		selectGameNamePanel.add(gameNameListLabel);
+		selectGameNamePanel.add(gameNameList);
+
 		populateGameIdList();
 
-		avlbGamesLabel.setStyleName("wcg-Text");
+		// Adds the Available Games label and list to the corresponding Panel, as well
+		// as the Button to Join the Game
 		selectGameIdPanel.add(avlbGamesLabel);
-		gameIdList.addStyleName("wcg-Text");
 		selectGameIdPanel.add(gameIdList);
-		btnJoinGame.addStyleName("wcg-Text");
-		btnAddBots.addStyleName("wcg-Text");
-		ownedGameIdList.addStyleName("wcg-Text");
 		selectGameIdPanel.add(btnJoinGame);
+
+		// Adds the Sub-Panels to the Main-Panel of the Widget
+		selectGamePanel.add(selectGameNamePanel);
 		selectGamePanel.add(selectGameIdPanel);
 
 		selectGameModeWidget = selectGamePanel;
@@ -158,24 +142,22 @@ public class GameCreation extends SubPanel {
 
 				if (!selectGameToAddBotsPanel.isAttached()) {
 
+					// Clears the Panel, since it won't always be present, removing any previously
+					// present elements
 					selectGameToAddBotsPanel.clear();
 					ownedGameIdList.clear();
 
-					selectGameToAddBotsPanel.setSpacing(10);
-
-					ownedGameIdList.ensureDebugId("cwListBox-multiBox");
-					ownedGameIdList.setWidth("11em");
-					ownedGameIdList.setMultipleSelect(false);
-					ownedGameIdList.setVisibleItemCount(10);
-
-					ownedGamesLabel.setStyleName("wcg-Text");
+					// Adds the Owned Games label and list to the corresponding Panel, as well as
+					// the Button to Add Bots
 					selectGameToAddBotsPanel.add(ownedGamesLabel);
 					selectGameToAddBotsPanel.add(ownedGameIdList);
 					selectGameToAddBotsPanel.add(btnAddBots);
 
+					// Adds the Sub-Panel to the Main-Panel of the Widget
 					selectGamePanel.add(selectGameToAddBotsPanel);
 				}
 
+				// Adds the newly created gameId to the list of owned Games
 				String itemForList = gameId + " - 1/" + AuxMethods.numberOfPlayers(gameName);
 				ownedGameIdList.addItem(itemForList, gameId);
 				ownedGameIdList.setSelectedIndex(0);
@@ -227,7 +209,7 @@ public class GameCreation extends SubPanel {
 	 * gameIdList, depending on the currently selected game
 	 */
 	private void populateGameIdList() {
-		String name = gameList.getSelectedItemText();
+		String name = gameNameList.getSelectedItemText();
 
 		gameIdList.clear();
 
@@ -251,7 +233,6 @@ public class GameCreation extends SubPanel {
 		});
 
 		gameIdList.addItem(NEW_GAME_STRING, NEW_GAME_STRING);
-
 		gameIdList.setSelectedIndex(0);
 	}
 
@@ -265,7 +246,7 @@ public class GameCreation extends SubPanel {
 	 */
 	private void joinGame() {
 		String gameId = gameIdList.getSelectedValue();
-		String gameName = gameList.getSelectedItemText();
+		String gameName = gameNameList.getSelectedItemText();
 
 		if (gameId.equals(NEW_GAME_STRING)) {
 			createGame(gameName);
@@ -292,8 +273,14 @@ public class GameCreation extends SubPanel {
 	}
 
 	/**
-	 * Creates a new Tab to Play, depending on the type of game. If the selected
-	 * game doesn't currently have enough players to start, adds bots until it does
+	 * <p>
+	 * Checks the current Number of Players in a Game with gameId, and adds Bots for
+	 * the rest of missing players
+	 * </p>
+	 * <p>
+	 * Then removes the gameId from the list of Owned Games, so that the User can't
+	 * attempt to add Bots again
+	 * </p>
 	 */
 	private void forceStartGame() {
 		String gameId = ownedGameIdList.getSelectedValue();
@@ -321,5 +308,46 @@ public class GameCreation extends SubPanel {
 					selectGamePanel.remove(selectGameToAddBotsPanel);
 			}
 		});
+	}
+
+	/**
+	 * Applies the diverse StyleNames and other layout settings to the elements
+	 */
+	private void applyStylizingSettings() {
+		gameCreation.setStyleName("wcg-Panel");
+
+		vPanel.setSpacing(0);
+
+		selectGameNamePanel.setSpacing(10);
+
+		gameNameListLabel.setStyleName("wcg-Text");
+
+		gameNameList.setMultipleSelect(false);
+		gameNameList.setVisibleItemCount(1);
+		gameNameList.addStyleName("wcg-Text");
+
+		selectGameIdPanel.setSpacing(10);
+
+		avlbGamesLabel.setStyleName("wcg-Text");
+
+		gameIdList.ensureDebugId("cwListBox-multiBox");
+		gameIdList.setWidth("11em");
+		gameIdList.setMultipleSelect(false);
+		gameIdList.setVisibleItemCount(10);
+		gameIdList.addStyleName("wcg-Text");
+
+		btnJoinGame.addStyleName("wcg-Text");
+
+		selectGameToAddBotsPanel.setSpacing(10);
+
+		ownedGamesLabel.setStyleName("wcg-Text");
+
+		ownedGameIdList.ensureDebugId("cwListBox-multiBox");
+		ownedGameIdList.setWidth("11em");
+		ownedGameIdList.setMultipleSelect(false);
+		ownedGameIdList.setVisibleItemCount(10);
+		ownedGameIdList.addStyleName("wcg-Text");
+
+		btnAddBots.addStyleName("wcg-Text");
 	}
 }

@@ -29,17 +29,7 @@ public class WebCardGame implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		// Starts by applying StyleNames and other layout settings to the elements
-		tabPanel.setStyleName("wcg-TabPanel");
-
-		tabPanelBar.addStyleName("wcg-TabPanelBar");
-		tabPanelDeck.addStyleName("wcg-TabPanelDeck");
-
-		systemMessagesPanel.setSpacing(5);
-		systemMessagesStatic.setStyleName("wcg-Text");
-		systemMessages.setStyleName("wcg-Text");
-
-		selectGameNotLoggedIn.setStyleName("wcg-Panel");
-		notLoggedIn.setStyleName("wcg-Text");
+		applyStylizingSettings();
 
 		// Create a tab panel with two tabs, each of which displays a different
 		// piece of text.
@@ -60,5 +50,22 @@ public class WebCardGame implements EntryPoint {
 		// Add the elements to the root panel
 		rootPanel.add(systemMessagesPanel);
 		rootPanel.add(tabPanel);
+	}
+
+	/**
+	 * Applies the diverse StyleNames and other layout settings to the elements
+	 */
+	private void applyStylizingSettings() {
+		tabPanel.setStyleName("wcg-TabPanel");
+
+		tabPanelBar.addStyleName("wcg-TabPanelBar");
+		tabPanelDeck.addStyleName("wcg-TabPanelDeck");
+
+		systemMessagesPanel.setSpacing(5);
+		systemMessagesStatic.setStyleName("wcg-Text");
+		systemMessages.setStyleName("wcg-Text");
+
+		selectGameNotLoggedIn.setStyleName("wcg-Panel");
+		notLoggedIn.setStyleName("wcg-Text");
 	}
 }

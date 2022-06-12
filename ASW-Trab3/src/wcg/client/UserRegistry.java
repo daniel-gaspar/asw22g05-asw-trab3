@@ -30,6 +30,13 @@ public class UserRegistry extends MainPanel {
 	private final TextBox usernameBox = new TextBox();
 	private final HTML passwordLabel = new HTML("Password: ");
 	private final PasswordTextBox passwordBox = new PasswordTextBox();
+	private final HorizontalPanel userPanel = new HorizontalPanel();
+	private final HTML newUsernameLabel = new HTML("");
+	private final Button registerButton = new Button("Register", new ClickHandler() {
+		public void onClick(ClickEvent event) {
+			registerPlayer();
+		}
+	});
 
 	public UserRegistry(TabPanelIds tabPanel, CardGameServiceAsync cardGameService, HTML messages) {
 		super(tabPanel, cardGameService, messages);
@@ -41,73 +48,93 @@ public class UserRegistry extends MainPanel {
 	}
 
 	public Widget onRegisterInitialize() {
-		// Create a panel to layout the widgets
-		vPanel.setSpacing(5);
-		vPanel.setStyleName("wcg-Panel");
-		vPanel.addStyleName("wcg-UserRegistry");
+		// Starts by applying StyleNames and other layout settings to the elements
+		applyStylizingSettings();
 
-		// Username
+		// Adds the elements of Username to the VerticalPanel
 		usernameBox.ensureDebugId("regUsrTxtBox");
-		usernameLabel.setStyleName("wcg-Text");
-		usernameBox.setStyleName("wcg-Text");
 		vPanel.add(usernameLabel);
 		vPanel.add(usernameBox);
 
-		// Password
+		// Adds the elements of Password to the VerticalPanel
 		passwordBox.ensureDebugId("regPwdBox");
-		passwordLabel.setStyleName("wcg-Text");
-		passwordBox.setStyleName("wcg-Text");
 		vPanel.add(passwordLabel);
 		vPanel.add(passwordBox);
 
-		// Add a normal button
-		Button registerButton = new Button("Register", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				String username = usernameBox.getText().toString();
-				String password = passwordBox.getText().toString();
-
-				if (!FieldVerifier.isValidName(username))
-					systemMessages.setHTML("Invalid user, must have 4 or more characters");
-				else if (!FieldVerifier.isValidName(password))
-					systemMessages.setHTML("Invalid password, must have 4 or more characters");
-				else {
-					cardGameService.registerPlayer(username, password, new AsyncCallback<Void>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							systemMessages.setHTML("Login not successful: " + caught.getMessage());
-						}
-
-						@Override
-						public void onSuccess(Void result) {
-							systemMessages.setHTML("Login successful");
-
-							tabPanel.clear();
-
-							// Adds a new tab with only the Username
-							HorizontalPanel userPanel = new HorizontalPanel();
-							userPanel.setStyleName("wcg-Panel");
-							HTML newUsernameLabel = new HTML("Username: " + username);
-							newUsernameLabel.setStyleName("wcg-Text");
-							userPanel.add(newUsernameLabel);
-							tabPanel.add(userPanel, "User");
-
-							// Adds a new "Select Game" tab
-							tabPanel.add(
-									new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
-									"Select Game", SELECT_GAME_TAB);
-
-							tabPanel.selectTab(1);
-						}
-					});
-				}
-			}
-		});
+		// Adds the Button to the VerticalPanel
 		registerButton.ensureDebugId("cwBasicButton-normal");
-		registerButton.addStyleName("wcg-Text");
 		vPanel.add(registerButton);
 
 		// Return the panel
 		return vPanel;
+	}
+
+	/**
+	 * <p>
+	 * Prompts the server to Register a Player, after verifying that the Fields are
+	 * valid
+	 * </p>
+	 * <p>
+	 * When Successful, Creates new Tabs
+	 * </p>
+	 */
+	private void registerPlayer() {
+		String username = usernameBox.getText().toString();
+		String password = passwordBox.getText().toString();
+
+		if (!FieldVerifier.isValidName(username))
+			systemMessages.setHTML("Invalid user, must have 4 or more characters");
+		else if (!FieldVerifier.isValidName(password))
+			systemMessages.setHTML("Invalid password, must have 4 or more characters");
+		else {
+			cardGameService.registerPlayer(username, password, new AsyncCallback<Void>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					systemMessages.setHTML("Login not successful: " + caught.getMessage());
+				}
+
+				@Override
+				public void onSuccess(Void result) {
+					systemMessages.setHTML("Login successful");
+
+					// As Login/Registry was successful, the existing tabs are cleared, and a new
+					// Tab with just the username is created, as well as another with the proper
+					// GameCreation
+					tabPanel.clear();
+
+					// Adds a new tab with only the Username
+					newUsernameLabel.setHTML("Username: " + username);
+					userPanel.add(newUsernameLabel);
+					tabPanel.add(userPanel, "User");
+
+					// Adds a new "Select Game" tab
+					tabPanel.add(new GameCreation(tabPanel, username, password, cardGameService).getGameCreation(),
+							"Select Game", SELECT_GAME_TAB);
+
+					tabPanel.selectTab(SELECT_GAME_TAB);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Applies the diverse StyleNames and other layout settings to the elements
+	 */
+	private void applyStylizingSettings() {
+		vPanel.setSpacing(5);
+		vPanel.setStyleName("wcg-Panel");
+		vPanel.addStyleName("wcg-UserRegistry");
+
+		usernameLabel.setStyleName("wcg-Text");
+		usernameBox.setStyleName("wcg-Text");
+
+		passwordLabel.setStyleName("wcg-Text");
+		passwordBox.setStyleName("wcg-Text");
+
+		userPanel.setStyleName("wcg-Panel");
+		newUsernameLabel.setStyleName("wcg-Text");
+
+		registerButton.addStyleName("wcg-Text");
 	}
 }

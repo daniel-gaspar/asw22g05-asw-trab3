@@ -68,8 +68,8 @@ public abstract class GamePlay extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		gamePlay = onGamePlayInitialize();
-		gamePlay.setStyleName("wcg-Panel");
-		gamePlay.addStyleName("wcg-GameArea");
+		applyStylizingSettings();
+
 		processEvents();
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
@@ -91,8 +91,6 @@ public abstract class GamePlay extends SubPanel {
 	 * @return gamePlayPanel
 	 */
 	private Widget onGamePlayInitialize() {
-		gamePlayPanel.setSpacing(2);
-		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
 		gamePlayPanel.add(centerPanel, DockPanel.CENTER);
 		gamePlayPanel.add(southPanel, DockPanel.SOUTH);
@@ -257,5 +255,16 @@ public abstract class GamePlay extends SubPanel {
 	 * Draw the cards currently on the Table
 	 */
 	protected abstract Widget drawCardsOnTable();
+
+	/**
+	 * Applies the diverse StyleNames and other layout settings to the elements
+	 */
+	private void applyStylizingSettings() {
+		gamePlay.setStyleName("wcg-Panel");
+		gamePlay.addStyleName("wcg-GameArea");
+
+		gamePlayPanel.setSpacing(2);
+		gamePlayPanel.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+	}
 
 }

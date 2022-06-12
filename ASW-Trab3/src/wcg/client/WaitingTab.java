@@ -26,7 +26,17 @@ public class WaitingTab extends SubPanel {
 
 	private static final boolean FLAG_AUTOBOTS_ROLLOUT = false;
 
-	private Widget waitingTab;
+	private Widget waitingTab = new HorizontalPanel();
+
+	private final HTML waitingGameLabel = new HTML("Waiting for the game to start");
+	private final HorizontalPanel tabWidget = new HorizontalPanel();
+	private final HTML tabWidgetText = new HTML();
+	private final Button tabWidgetClose = new Button("x", new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			closeGame();
+		}
+	});
 
 	private String gameId;
 	private boolean owner_flag;
@@ -40,6 +50,7 @@ public class WaitingTab extends SubPanel {
 		super(username, password);
 		this.gameId = gameId;
 		this.owner_flag = owner;
+
 		waitingTabInitialization();
 
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
@@ -57,10 +68,10 @@ public class WaitingTab extends SubPanel {
 	}
 
 	private void waitingTabInitialization() {
-		waitingTab = new HorizontalPanel();
-		waitingTab.setStyleName("wcg-Panel");
-		HTML waitingGameLabel = new HTML("Waiting for the game to start");
-		waitingGameLabel.setStyleName("wcg-Text");
+		// Starts by applying StyleNames and other layout settings to the elements
+		applyStylizingSettings();
+
+		// Adds the waitingGameLabel to the Waiting Tab Panel
 		((HorizontalPanel) waitingTab).add(waitingGameLabel);
 	}
 
@@ -68,6 +79,15 @@ public class WaitingTab extends SubPanel {
 		return waitingTab;
 	}
 
+	/**
+	 * <p>
+	 * Prompts the server for a list of Available Game Infos, to verify whether the
+	 * current Game is ready to start or not
+	 * </p>
+	 * <p>
+	 * If it's ready to start, stops the Scheduler, removes the current Tab and
+	 * replaces it with a new, GamePlayWAR or GamePlayHEARTS
+	 */
 	private void verifyStartGame() {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
@@ -87,18 +107,6 @@ public class WaitingTab extends SubPanel {
 						if (currentPlayersCount == AuxMethods.numberOfPlayers(currentGameName)) {
 							repeat = false;
 							tabPanel.remove(gameId);
-							HorizontalPanel tabWidget = new HorizontalPanel();
-							tabWidget.addStyleName("wcg-TabWidget");
-							HTML tabWidgetText = new HTML("Play: " + gameId);
-							tabWidgetText.addStyleName("wcg-TabWidgetText");
-							Button tabWidgetClose = new Button("x", new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									tabPanel.selectTab(SELECT_GAME_TAB);
-									tabPanel.remove(gameId);
-								}
-							});
-							tabWidgetClose.addStyleName("wcg-TabWidgetClose");
 
 							tabWidget.add(tabWidgetText);
 							tabWidget.add(tabWidgetClose);
@@ -117,6 +125,16 @@ public class WaitingTab extends SubPanel {
 		});
 	}
 
+	/**
+	 * <p>
+	 * Prompts the server for a list of Available Game Infos, to verify whether the
+	 * current Game is ready to start or not
+	 * </p>
+	 * <p>
+	 * If the Game isn't ready to start, and longer than GAME_START_TIMEOUT has
+	 * passed, Bots are added to the Game
+	 * </p>
+	 */
 	private void verifyAddBots() {
 		cardGameService.getAvailableGameInfos(new AsyncCallback<List<GameInfo>>() {
 			@Override
@@ -147,5 +165,29 @@ public class WaitingTab extends SubPanel {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Applies the diverse StyleNames and other layout settings to the elements
+	 */
+	private void applyStylizingSettings() {
+		waitingTab.setStyleName("wcg-Panel");
+
+		waitingGameLabel.setStyleName("wcg-Text");
+
+		tabWidget.addStyleName("wcg-TabWidget");
+
+		tabWidgetText.setHTML("Play: " + gameId);
+		tabWidgetText.addStyleName("wcg-TabWidgetText");
+
+		tabWidgetClose.addStyleName("wcg-TabWidgetClose");
+	}
+
+	/**
+	 * Selects the 'Select Game' Tab and closes the current Game Tab
+	 */
+	private void closeGame() {
+		tabPanel.selectTab(SELECT_GAME_TAB);
+		tabPanel.remove(gameId);
 	}
 }
