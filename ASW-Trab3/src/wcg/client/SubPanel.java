@@ -9,8 +9,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public abstract class SubPanel extends MainPanel {
 
-	protected static final boolean FLAG_AUTOBOTS_ROLLOUT = false;
-
 	protected static String username;
 	protected static String password;
 
