@@ -205,6 +205,8 @@ public abstract class GameMaster extends ObservableGame {
 
 		for (String nick : players.getPlayerNicks()) {
 			CardCollection cardsToSend = deck.takeFirstCards(getCardsPerPlayer());
+			if("HEARTS".equals(getGameName()))
+				cardsToSend.sort();
 			sendCards(nick, cardsToSend);
 			players.addCardsToHand(nick, cardsToSend);
 		}
