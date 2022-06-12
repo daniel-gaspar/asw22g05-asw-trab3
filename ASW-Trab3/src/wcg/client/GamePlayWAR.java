@@ -35,7 +35,7 @@ public class GamePlayWAR extends GamePlay {
 
 	public GamePlayWAR(String gameId) {
 		super(gameId);
-		cardsOnTablePanel.setWidth("300px");
+		cardsOnHandPanel.setStyleName("wcg-CardsOnHand");
 	}
 
 	/**
@@ -115,7 +115,9 @@ public class GamePlayWAR extends GamePlay {
 		cardsOnTablePanel.clear();
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
-		cardsOnTablePanel.add(new HorizontalPanel(), DockPanel.CENTER);
+		HorizontalPanel centerPanel = new HorizontalPanel();
+		centerPanel.setStyleName("wcg-GameAreaOnTableCenterPanel");
+		cardsOnTablePanel.add(centerPanel, DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
 

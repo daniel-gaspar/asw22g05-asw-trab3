@@ -42,8 +42,7 @@ public class GamePlayHEARTS extends GamePlay {
 
 	public GamePlayHEARTS(String gameId) {
 		super(gameId);
-		cardsOnHandPanel.setWidth("900px");
-		cardsOnHandPanel.setHeight("120px");
+		cardsOnHandPanel.setStyleName("wcg-CardsOnHand");
 	}
 
 	/**
@@ -121,7 +120,7 @@ public class GamePlayHEARTS extends GamePlay {
 		cardsOnTablePanel.setSpacing(0);
 		cardsOnTablePanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		HorizontalPanel centerPanel = new HorizontalPanel();
-		centerPanel.setPixelSize(83, 120);
+		centerPanel.setStyleName("wcg-GameAreaOnTableCenterPanel");
 		cardsOnTablePanel.add(centerPanel, DockPanel.CENTER);
 
 		playerPosition.put(username, DockPanel.SOUTH);
